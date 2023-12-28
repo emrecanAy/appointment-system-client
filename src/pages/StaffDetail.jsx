@@ -7,7 +7,6 @@ import {
   Row,
   Col,
   Card,
-  Divider,
   Table,
 } from "antd";
 import { useParams } from "react-router-dom";

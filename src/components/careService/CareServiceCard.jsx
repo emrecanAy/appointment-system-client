@@ -1,6 +1,6 @@
-import { Button, Card } from "antd";
+import { Button, Card, Popconfirm, message } from "antd";
 
-function ServiceCard({ id, title, description, image }) {
+function ServiceCard({ id, title, description, image, onEditClick }) {
   const truncateDescription = (text, maxLength = 100) => {
     if (text.length <= maxLength) {
       return text;
@@ -9,11 +9,16 @@ function ServiceCard({ id, title, description, image }) {
   };
 
   const handleEdit = (id) => {
-    console.log(id, "Düzenlendi!");
+    onEditClick(id, title, description, image);
   };
 
-  const handleDelete = (id) => {
-    console.log(id, "Silindi");
+  const onDeleteConfirm = (e) => {
+    console.log(e);
+    message.success(`Id:${id} olan veri silindi!`);
+  };
+  const onDeleteCancel = (e) => {
+    console.log(e);
+    message.error('Click on No');
   };
 
   return (
@@ -44,14 +49,23 @@ function ServiceCard({ id, title, description, image }) {
         >
           Düzenle
         </Button>
-        <Button
-          id="delete"
-          type="primary"
-          style={{ backgroundColor: "firebrick" }}
-          onClick={() => handleDelete(id)}
+
+        <Popconfirm
+          title="Sil"
+          description="Silmek istediğinize emin misiniz?"
+          onConfirm={onDeleteConfirm}
+          onCancel={onDeleteCancel}
+          okText="Evet"
+          cancelText="İptal"
         >
-          Sil
-        </Button>
+          <Button
+            id="delete"
+            type="primary"
+            style={{ backgroundColor: "firebrick" }}
+          >
+            Sil
+          </Button>
+        </Popconfirm>
       </div>
     </Card>
   );

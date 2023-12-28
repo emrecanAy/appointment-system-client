@@ -79,7 +79,7 @@ const careServices = [
   },
 ];
 
-function CareServiceList() {
+function CareServiceList({onEditClick}) {
   return (
     <List
       grid={{ gutter: 16, column: 5 }} // Adjusted column to 1 for smaller screens
@@ -91,6 +91,7 @@ function CareServiceList() {
             title={service.title}
             description={service.description}
             image={service.image}
+            onEditClick={() => onEditClick(service.id, service.title, service.description, service.image)}
           />
         </List.Item>
       )}
