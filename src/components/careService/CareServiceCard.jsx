@@ -37,6 +37,7 @@ function ServiceCard({ id, title, description, image }) {
         }}
       >
         <Button
+          id="edit"
           type="primary"
           style={{ backgroundColor: "orange" }}
           onClick={() => handleEdit(id)}
@@ -44,6 +45,7 @@ function ServiceCard({ id, title, description, image }) {
           Düzenle
         </Button>
         <Button
+          id="delete"
           type="primary"
           style={{ backgroundColor: "firebrick" }}
           onClick={() => handleDelete(id)}

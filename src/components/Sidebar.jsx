@@ -6,10 +6,11 @@ import {
   TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Image, Menu } from "antd";
+import { Image, Menu, Typography } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Link } from "react-router-dom";
 const { SubMenu } = Menu;  // Corrected import
+const { Text } = Typography;
 
 function Sidebar({currentUser}) {
   const [collapsed, setCollapsed] = useState(false);
@@ -17,35 +18,25 @@ function Sidebar({currentUser}) {
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);
   };
-
+  
   return (
     <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
-        <div className="logo">
+        <div>
           {collapsed ? (
             <UserOutlined />
           ) : (
-            <div
-              style={{
-                textAlign: "center",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "100%",
-              }}
-            >
-       
-              <Image src="https://static.toiimg.com/photo/msid-67586673/67586673.jpg"/>
-              <div
-                style={{
-                  marginTop: "8px",
-                  fontSize: "16px",
-                  fontWeight: "bold",
-                }}
-              >
-                {currentUser.name}
-              </div>
-            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '16px' }}>
+        {collapsed ? (
+          <UserOutlined style={{ fontSize: '32px', color: '#fff' }} />
+        ) : (
+          <Image src={currentUser.imageUrl} size={64} />
+        )}
+        {!collapsed && (
+          <div style={{ textAlign: 'center', marginTop: '8px' }}>
+          <Text strong style={{ fontSize: '18px', color: '#fff' }}>{currentUser.name}</Text>
+        </div>
+        )}
+      </div>
           )}
         </div>
         <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
@@ -54,7 +45,7 @@ function Sidebar({currentUser}) {
           </Menu.Item>
           <SubMenu key="sub3" icon={<UserOutlined />} title="Kuaför İşlemleri">
             <Menu.Item key="2"><Link to={"/care-services"} style={{ color: "inherit", textDecoration: "none" }} >Bakım Servisleri</Link></Menu.Item>
-            <Menu.Item key="3">Bill</Menu.Item>
+            <Menu.Item key="3"><Link to={"/staff/testadd"}>Bill</Link></Menu.Item>
             <Menu.Item key="4">Alex</Menu.Item>
           </SubMenu>
           <Menu.Item key="5" icon={<DesktopOutlined />}><Link to={"/staff"}>Personel İşlemleri</Link></Menu.Item>
