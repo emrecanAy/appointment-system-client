@@ -1,0 +1,15 @@
+.logo {
+    height: 200px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px;
+  }
+  
+  .site-layout-background {
+    background: #fff;
+  }
+  
+  .site-layout .site-layout-background {
+    margin: -24px;
+    padding: 24px;
+  }
+  
