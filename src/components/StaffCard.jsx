@@ -3,18 +3,21 @@ import Card from "antd/es/card/Card";
 import Meta from "antd/es/card/Meta";
 import React from "react";
 
-function StaffCard({ user }) {
+function StaffCard({ staff }) {
+
+  const actions = ["Task 1", "Task 2", "Task 3"];
+
   return (
-    <Card key={user.id} style={{ width: 300, marginBottom: 16 }}>
+    <Card key={staff.staffId} style={{ width: 300, marginBottom: 16 }}>
       <Meta
-        avatar={<Avatar src={user.avatar} />}
-        title={user.name}
-        description={user.profession}
+        avatar={<Avatar src={staff.imagePath} />}
+        title={staff.firstName + " " + staff.lastName}
+        description={staff.role}
       />
       <div style={{ marginTop: "16px" }}>
         <List
           size="small"
-          dataSource={user.actions}
+          dataSource={actions}
           renderItem={(item) => <List.Item>{item}</List.Item>}
         />
       </div>

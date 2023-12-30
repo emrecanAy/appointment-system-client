@@ -1,27 +1,39 @@
-import { Button, Col, Input, Modal, Row, Typography } from 'antd'
+import { Button, Col, Input, Modal, Row, Typography, message } from 'antd'
 import React, { useState } from 'react'
 import CareServiceList from '../components/careService/CareServiceList'
+import CareServiceService from '../api/CareServiceService.ts';
+
 const { Text } = Typography;
 
 function CareService() {
-  const [editModalVisible, setEditModalVisible] = useState(false);
-  const [editedCareService, setEditedCareService] = useState({ id: null, title: '', description: '', image: '' });
 
-  const handleEditClick = (id, title, description, image) => {
-    setEditedCareService({ id, title, description, image });
+  //Services
+  const careServiceService = new CareServiceService();
+
+  //States
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editedCareService, setEditedCareService] = useState({ careServiceId: null, careServiceName: '', careServiceDescription: '', imagePath: '' });
+
+  const handleEditClick = (careServiceId, careServiceName, careServiceDescription, imagePath) => {
+    setEditedCareService({ careServiceId, careServiceName, careServiceDescription, imagePath });
     setEditModalVisible(true);
   };
 
   const handleAddNew = () => {
-    setEditedCareService({ id: null, title: '', description: '', image: '' });
+    setEditedCareService({ careServiceId: null, careServiceName: '', careServiceDescription: '', imagePath: '' });
     setEditModalVisible(true);
   };
 
-  const handleSubmit = () => {
-    if(editedCareService.id === null){
-      console.log("Add operation!");
+  const handleSubmit = async() => {
+    if(editedCareService.careServiceId === null){
+      const response = await careServiceService.createCareService(editedCareService); 
+      message.success(`${editedCareService.careServiceName} eklendi!`);
+      console.log("1071 ADD: ", response);
     }else{
-      console.log("Update operation!");
+      const response = await careServiceService.updateCareService(editedCareService);
+      message.success(`${editedCareService.careServiceName} güncellendi!`);
+      console.log("1071 UPDATE: ", response);
+      
     }
     setEditModalVisible(false);
   };
@@ -29,6 +41,7 @@ function CareService() {
   const handleModalCancel = () => {
     setEditModalVisible(false);
   };
+  
   return (
     <div style={{ padding: '24px' }}>
     <Row justify="start" align="middle">
@@ -43,6 +56,7 @@ function CareService() {
     </Row>
     <CareServiceList onEditClick={handleEditClick}/>
     <Modal
+        key={editedCareService.careServiceId}
         title="Bakım Servisi"
         open={editModalVisible}
         footer={[
@@ -60,19 +74,19 @@ function CareService() {
         <Input
           style={{marginBottom: 5}}
           placeholder="Görsel URL"
-          value={editedCareService.image}
-          onChange={(e) => setEditedCareService({ ...editedCareService, image: e.target.value })}
+          value={editedCareService.imagePath}
+          onChange={(e) => setEditedCareService({ ...editedCareService, imagePath: e.target.value })}
         />
         <Input
           style={{marginBottom: 5}}
           placeholder="Bakım Servisi"
-          value={editedCareService.title}
-          onChange={(e) => setEditedCareService({ ...editedCareService, title: e.target.value })}
+          value={editedCareService.careServiceName}
+          onChange={(e) => setEditedCareService({ ...editedCareService, careServiceName: e.target.value })}
         />
         <Input.TextArea
           placeholder="Açıklama"
-          value={editedCareService.description}
-          onChange={(e) => setEditedCareService({ ...editedCareService, description: e.target.value })}
+          value={editedCareService.careServiceDescription}
+          onChange={(e) => setEditedCareService({ ...editedCareService, careServiceDescription: e.target.value })}
         />
       </Modal>
   </div>

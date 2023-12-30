@@ -1,31 +1,57 @@
-import React from "react";
-import {
-  Form,
-  Input,
-  Button,
-  Select,
-  Row,
-  Col,
-  Card,
-  Table,
-} from "antd";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Form, Input, Button, Select, Row, Col, Card, Table, message, Popconfirm } from "antd";
+import { useNavigate, useParams } from "react-router-dom";
+import StaffService from "../api/StaffService.ts";
 
 const { Option } = Select;
 
+const staffService = new StaffService();
+
 const StaffDetail = () => {
-  const onFinish = (values) => {
+  const [staff, setStaff] = useState({});
+  const [form] = Form.useForm(); 
+  const navigate = useNavigate();
+
+  const onFinish = async (values) => {
+    const response = await staffService.updateStaff({...values, staffId});
+    message.success(`Personel güncellendi!`);
+    console.log(response);
     console.log("Received values:", values);
   };
 
+  const handleDelete = async () => {
+    const response = await staffService.deleteStaff(staff);
+    console.log(response);
+    message.warning(`${staff.firstName + " " + staff.lastName} silindi!`);
+    navigate('/staff');
+  };
+
   const { staffId } = useParams();
+
+  const getStaffById = async () => {
+    try {
+      const response = await staffService.getStaffById(staffId);
+      setStaff(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getStaffById();
+  }, [staffId]);
+
+  useEffect(() => {
+    // staff state'i değiştiğinde formun başlangıç değerlerini güncelle
+    form.setFieldsValue(staff);
+  }, [staff]);
 
   // Örnek veri
   const data = [
     { key: 1, name: "John Doe", age: 30, role: "Admin" },
     { key: 2, name: "Jane Doe", age: 28, role: "Staff" },
-    { key: 2, name: "Justin Doe", age: 23, role: "Staff" },
-    { key: 2, name: "James Doe", age: 23, role: "Staff" },
+    { key: 3, name: "Justin Doe", age: 23, role: "Staff" },
+    { key: 4, name: "James Doe", age: 23, role: "Staff" },
     // Diğer örnek verileri ekleyebilirsiniz.
   ];
 
@@ -36,6 +62,10 @@ const StaffDetail = () => {
     { title: "Role", dataIndex: "role", key: "role" },
   ];
 
+  if (!staff) {
+    return <div>Loading...</div>; 
+  }
+
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
       <Row gutter={[16, 16]}>
@@ -43,20 +73,19 @@ const StaffDetail = () => {
         <Col span={12}>
           <Card style={{ width: "100%" }}>
             <div style={{ marginBottom: "20px" }}>
-              <img
-                src="https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
-                alt="User"
-                style={{ width: "25%" }}
-              />
-              <h2>Ad Soyad {staffId}</h2>
+              <img src={staff.imagePath} alt="User" style={{ width: "25%" }} />
+              <h2 id={"fullname"}>
+                {staff ? staff.firstName + " " + staff.lastName : "Loading..."}
+              </h2>
             </div>
 
             <Form
               name="userForm"
-              initialValues={{ remember: true }}
+              initialValues={staff}
               onFinish={onFinish}
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
+              form={form}
             >
               <Form.Item
                 label="First Name"
@@ -120,17 +149,23 @@ const StaffDetail = () => {
                 <Input.Password />
               </Form.Item>
               <Form.Item
+               label="Image"
+               name="imagePath"
+               rules={[
+                 { required: true, message: "Please input the image path!" },
+               ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
                 label="Role"
                 name="role"
                 rules={[{ required: true, message: "Please select a role!" }]}
               >
                 <Select>
-                  <Option value="admin">Admin</Option>
-                  <Option value="user">Staff</Option>
+                  <Option value="0">Admin</Option>
+                  <Option value="1">Staff</Option>
                 </Select>
-              </Form.Item>
-              <Form.Item label="Image" name="image">
-                <Input />
               </Form.Item>
 
               {/* Submit Button */}
@@ -138,6 +173,16 @@ const StaffDetail = () => {
                 <Button type="primary" htmlType="submit">
                   Kaydet
                 </Button>
+                <Popconfirm
+                  title="Personeli silmek istediğinizden emin misiniz?"
+                  onConfirm={handleDelete}
+                  okText="Evet"
+                  cancelText="Hayır"
+                >
+                  <Button type="primary" style={{ marginLeft: 8, backgroundColor: "firebrick" }}>
+                    Sil
+                  </Button>
+                </Popconfirm>
               </Form.Item>
             </Form>
           </Card>

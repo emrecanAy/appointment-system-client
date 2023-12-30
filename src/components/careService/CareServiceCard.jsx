@@ -1,6 +1,11 @@
 import { Button, Card, Popconfirm, message } from "antd";
+import CareServiceService from "../../api/CareServiceService.ts";
 
-function ServiceCard({ id, title, description, image, onEditClick }) {
+function ServiceCard({ careServiceId, careServiceName, careServiceDescription, imagePath, onEditClick }) {
+
+  //Service
+  const careServiceService = new CareServiceService();
+
   const truncateDescription = (text, maxLength = 100) => {
     if (text.length <= maxLength) {
       return text;
@@ -9,16 +14,17 @@ function ServiceCard({ id, title, description, image, onEditClick }) {
   };
 
   const handleEdit = (id) => {
-    onEditClick(id, title, description, image);
+    onEditClick(careServiceId, careServiceName, careServiceDescription, imagePath);
   };
 
-  const onDeleteConfirm = (e) => {
-    console.log(e);
-    message.success(`Id:${id} olan veri silindi!`);
+  const onDeleteConfirm = async (e) => {
+    const response = await careServiceService.deleteCareService({careServiceId, careServiceName, careServiceDescription, imagePath});
+    console.log(response);
+    message.success(`${careServiceName} silindi!`);
   };
   const onDeleteCancel = (e) => {
     console.log(e);
-    message.error('Click on No');
+    message.error('İptal edildi!');
   };
 
   return (
@@ -27,13 +33,13 @@ function ServiceCard({ id, title, description, image, onEditClick }) {
       style={{ width: "100%", maxWidth: "300px", margin: "16px" }} // Adjusted width to be responsive
       cover={
         <img
-          alt={title}
-          src={image}
+          alt={careServiceName}
+          src={imagePath}
           style={{ objectFit: "cover", width: "100%", height: "150px" }}
         />
       }
     >
-      <Card.Meta title={title} description={truncateDescription(description)} />
+      <Card.Meta title={careServiceName} description={truncateDescription(careServiceDescription)} />
       <div
         style={{
           display: "flex",
@@ -45,7 +51,7 @@ function ServiceCard({ id, title, description, image, onEditClick }) {
           id="edit"
           type="primary"
           style={{ backgroundColor: "orange" }}
-          onClick={() => handleEdit(id)}
+          onClick={() => handleEdit(careServiceId)}
         >
           Düzenle
         </Button>
