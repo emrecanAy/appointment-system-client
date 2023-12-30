@@ -3,10 +3,8 @@ import Card from "antd/es/card/Card";
 import Meta from "antd/es/card/Meta";
 import React from "react";
 
-function StaffCard({ staff }) {
 
-  const actions = ["Task 1", "Task 2", "Task 3"];
-
+function StaffCard({ staff, staffCareServices }) {
   return (
     <Card key={staff.staffId} style={{ width: 300, marginBottom: 16 }}>
       <Meta
@@ -17,8 +15,8 @@ function StaffCard({ staff }) {
       <div style={{ marginTop: "16px" }}>
         <List
           size="small"
-          dataSource={actions}
-          renderItem={(item) => <List.Item>{item}</List.Item>}
+          dataSource={staffCareServices.filter(data => data.staff.staffId === staff.staffId)}
+          renderItem={(item) => <List.Item key={item.staffCareServiceId}>{item.careService.careServiceName}</List.Item>}
         />
       </div>
     </Card>

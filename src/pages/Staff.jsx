@@ -1,24 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Button, Col, Form, Input, Modal, Row, Select, Typography, message } from "antd";
 import StaffCard from "../components/StaffCard";
 import StaffService from "../api/StaffService.ts";
-import { Button, Col, Form, Input, Modal, Row, Select, Typography, message } from "antd";
+import StaffCareServiceService from "../api/StaffCareServiceService.ts";
+
 
 const { Text } = Typography;
 const { Option } = Select;
 
 //Services
 const staffService = new StaffService();
+const staffCareServiceService = new StaffCareServiceService();
 
 function Staff() {
   //States
   const [staffs, setStaffs] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [staffCareServices, setStaffCareServices] = useState([]);
 
   const getAllStaffs = async () => {
     try {
       const response = await staffService.getAllStaff();
       setStaffs(response.data);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
+  const getAllStaffCareServices = async () => {
+    try {
+      const response = await staffCareServiceService.getAll();
+      setStaffCareServices(response.data);
     } catch (error) {
       console.error("Error: ", error);
     }
@@ -39,9 +52,12 @@ function Staff() {
     console.log(response);
     setIsModalVisible(false);
   };
+  
+
 
   useEffect(() => {
     getAllStaffs();
+    getAllStaffCareServices();
   }, []);
 
   useEffect(() => {
@@ -65,7 +81,7 @@ function Staff() {
       <div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
         {staffs.map((staff) => (
           <Link key={staff.staffId} to={`/staff/${staff.staffId}`}>
-            <StaffCard staff={staff} />
+            <StaffCard staff={staff} staffCareServices={staffCareServices}/>
           </Link>
         ))}
       </div>

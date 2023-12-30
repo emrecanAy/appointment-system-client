@@ -11,24 +11,32 @@ import {
   message,
   Popconfirm,
   Statistic,
+  Space,
 } from "antd";
-import CountUp from 'react-countup';
+import CountUp from "react-countup";
 import { useNavigate, useParams } from "react-router-dom";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+
 import StaffService from "../api/StaffService.ts";
 import AppointmentService from "../api/AppointmentService.ts";
+import StaffCareServiceService from "../api/StaffCareServiceService.ts";
+import EditStaffCareServiceModal from "../components/EditStaffCareServiceModal.jsx";
 
 const { Option } = Select;
 
 //Services
 const staffService = new StaffService();
 const appointmentService = new AppointmentService();
+const staffCareServiceService = new StaffCareServiceService();
 
 const StaffDetail = () => {
-  
   //States
   const [staff, setStaff] = useState({});
   const [totalEarning, setTotalEarning] = useState(0);
   const [acceptedAppointments, setAcceptedAppointments] = useState([]);
+  const [staffCareServices, setStaffCareServices] = useState([]);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [selectedStaffCareService, setSelectedStaffCareService] = useState({});
 
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -60,7 +68,8 @@ const StaffDetail = () => {
 
   const getAllAcceptedAppointmentsByStaff = async (staffId) => {
     try {
-      const response = await appointmentService.getAllAcceptedAppointmentsByStaff(staffId);
+      const response =
+        await appointmentService.getAllAcceptedAppointmentsByStaff(staffId);
       setAcceptedAppointments(response.data);
     } catch (error) {
       console.error(error);
@@ -69,38 +78,108 @@ const StaffDetail = () => {
 
   const getTotalEarningsByStaff = async (staffId) => {
     try {
-      const response = await appointmentService.getTotalEarningsByStaff(staffId);
+      const response = await appointmentService.getTotalEarningsByStaff(
+        staffId
+      );
       setTotalEarning(response.data);
     } catch (error) {
       console.error(error);
     }
-  }
+  };
+
+  const getAllStaffCareServicesByStaff = async (staffId) => {
+    try {
+      const response = await staffCareServiceService.getAllByStaff(staffId);
+      setStaffCareServices(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleEditStaffCareService = (record) => {
+    setSelectedStaffCareService(record);
+    setEditModalVisible(true);
+  };
+
+  const handleUpdateStaffCareService = async (values) => {
+    values.staffCareServiceId = selectedStaffCareService.staffCareServiceId;
+    values.careServiceId = selectedStaffCareService.careService.careServiceId;
+    values.staffId = selectedStaffCareService.staff.staffId;
+
+    const response = await staffCareServiceService.updateStaffCareService(values);
+    message.success("Güncellendi!");
+    console.log("Güncelleme işlemi:", values);
+    console.log(selectedStaffCareService)
+    setEditModalVisible(false);
+  };
+
+  const onCareServiceDeleteConfirm = async (record) => {
+    console.log(record);
+    const response = await staffCareServiceService.deleteStaffCareService(
+      record
+    );
+    console.log(response);
+    message.success(`silindi!`);
+  };
+  const onCareServiceDeleteCancel = (e) => {
+    message.error("İptal edildi!");
+  };
 
   useEffect(() => {
     getStaffById();
     getTotalEarningsByStaff(staffId);
     getAllAcceptedAppointmentsByStaff(staffId);
-  }, [staffId]);
+    getAllStaffCareServicesByStaff(staffId);
+  }, [staffId, staffCareServices]);
 
   useEffect(() => {
     // staff state'i değiştiğinde formun başlangıç değerlerini güncelle
     form.setFieldsValue(staff);
   }, [staff]);
 
-  // Örnek veri
-  const data = [
-    { key: 1, name: "John Doe", age: 30, role: "Admin" },
-    { key: 2, name: "Jane Doe", age: 28, role: "Staff" },
-    { key: 3, name: "Justin Doe", age: 23, role: "Staff" },
-    { key: 4, name: "James Doe", age: 23, role: "Staff" },
-    // Diğer örnek verileri ekleyebilirsiniz.
-  ];
-
-  // Kolonlar
   const columns = [
-    { title: "Name", dataIndex: "name", key: "name" },
-    { title: "Age", dataIndex: "age", key: "age" },
-    { title: "Role", dataIndex: "role", key: "role" },
+    {
+      title: "Hizmet",
+      dataIndex: ["careService", "careServiceName"],
+      key: "careService.careServiceName",
+    },
+    { title: "Fiyat", dataIndex: "careServicePrice", key: "careServicePrice" },
+    {
+      title: "Süre",
+      dataIndex: "careServiceDuration",
+      key: "careServiceDuration",
+    },
+    {
+      title: "İşlemler",
+      key: "edit",
+      render: (text, record) => (
+        <>
+          <Space size="middle">
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              onClick={() => handleEditStaffCareService(record)}
+            />
+          </Space>
+          <Space size="middle">
+            <Popconfirm
+              title="Sil"
+              description="Silmek istediğinize emin misiniz?"
+              onConfirm={() => onCareServiceDeleteConfirm(record)}
+              onCancel={onCareServiceDeleteCancel}
+              okText="Evet"
+              cancelText="İptal"
+            >
+              <Button
+                type="primary"
+                style={{ backgroundColor: "firebrick", marginLeft: 5 }}
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
+          </Space>
+        </>
+      ),
+    },
   ];
 
   if (!staff) {
@@ -131,7 +210,7 @@ const StaffDetail = () => {
               form={form}
             >
               <Form.Item
-                label="First Name"
+                label="Ad"
                 name="firstName"
                 rules={[
                   { required: true, message: "Please input your first name!" },
@@ -140,7 +219,7 @@ const StaffDetail = () => {
                 <Input />
               </Form.Item>
               <Form.Item
-                label="Last Name"
+                label="Soyad"
                 name="lastName"
                 rules={[
                   { required: true, message: "Please input your last name!" },
@@ -149,7 +228,7 @@ const StaffDetail = () => {
                 <Input />
               </Form.Item>
               <Form.Item
-                label="Email"
+                label="Eposta"
                 name="email"
                 rules={[
                   {
@@ -162,7 +241,7 @@ const StaffDetail = () => {
                 <Input />
               </Form.Item>
               <Form.Item
-                label="Phone Number"
+                label="Telefon Numarası"
                 name="phoneNumber"
                 rules={[
                   {
@@ -174,7 +253,7 @@ const StaffDetail = () => {
                 <Input />
               </Form.Item>
               <Form.Item
-                label="Username"
+                label="Kullanıcı Adı"
                 name="userName"
                 rules={[
                   { required: true, message: "Please input your username!" },
@@ -183,7 +262,7 @@ const StaffDetail = () => {
                 <Input />
               </Form.Item>
               <Form.Item
-                label="Password"
+                label="Parola"
                 name="password"
                 rules={[
                   { required: true, message: "Please input your password!" },
@@ -192,7 +271,7 @@ const StaffDetail = () => {
                 <Input.Password />
               </Form.Item>
               <Form.Item
-                label="Image"
+                label="Fotoğraf"
                 name="imagePath"
                 rules={[
                   { required: true, message: "Please input the image path!" },
@@ -201,7 +280,7 @@ const StaffDetail = () => {
                 <Input />
               </Form.Item>
               <Form.Item
-                label="Role"
+                label="Rol"
                 name="role"
                 rules={[{ required: true, message: "Please select a role!" }]}
               >
@@ -234,22 +313,21 @@ const StaffDetail = () => {
           </Card>
         </Col>
 
-        {/* Yapılan İşlemler ve İzinler */}
+        {/* Hizmetler ve İzinler */}
         <Col span={12}>
           <Card style={{ width: "100%" }}>
             <Row gutter={16}>
               <Col span={12}>
-              <Statistic
+                <Statistic
                   title="Toplam İşlem"
                   value={acceptedAppointments.length}
                   precision={2}
                   formatter={formatter}
                 />
-                
               </Col>
               <Col span={12}>
-              <Statistic
-                  title="Toplam Kazanç"
+                <Statistic
+                  title="Toplam Kazanç(₺)"
                   value={totalEarning}
                   formatter={formatter}
                 />
@@ -258,11 +336,23 @@ const StaffDetail = () => {
           </Card>
 
           <Card title="Hizmetler" style={{ width: "100%" }}>
-            <Table dataSource={data} columns={columns} size="small" />
+            <Table
+              dataSource={staffCareServices}
+              columns={columns}
+              size="small"
+              rowKey={(record) => record.staffCareServiceId}
+            />
+            {/* Edit Modal */}
+            <EditStaffCareServiceModal
+              visible={editModalVisible}
+              onCancel={() => setEditModalVisible(false)}
+              onUpdate={handleUpdateStaffCareService}
+              initialValues={selectedStaffCareService}
+            />
           </Card>
 
           <Card title="İzinler" style={{ width: "100%" }}>
-            <Table dataSource={data} columns={columns} size="small" />
+            <Table dataSource={null} columns={columns} size="small" />
           </Card>
         </Col>
       </Row>
