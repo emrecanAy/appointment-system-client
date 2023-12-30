@@ -1,19 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Select, Row, Col, Card, Table, message, Popconfirm } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  Row,
+  Col,
+  Card,
+  Table,
+  message,
+  Popconfirm,
+  Statistic,
+} from "antd";
+import CountUp from 'react-countup';
 import { useNavigate, useParams } from "react-router-dom";
 import StaffService from "../api/StaffService.ts";
+import AppointmentService from "../api/AppointmentService.ts";
 
 const { Option } = Select;
 
+//Services
 const staffService = new StaffService();
+const appointmentService = new AppointmentService();
 
 const StaffDetail = () => {
+  
+  //States
   const [staff, setStaff] = useState({});
-  const [form] = Form.useForm(); 
+  const [totalEarning, setTotalEarning] = useState(0);
+  const [acceptedAppointments, setAcceptedAppointments] = useState([]);
+
+  const [form] = Form.useForm();
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
-    const response = await staffService.updateStaff({...values, staffId});
+    const response = await staffService.updateStaff({ ...values, staffId });
     message.success(`Personel güncellendi!`);
     console.log(response);
     console.log("Received values:", values);
@@ -23,7 +44,7 @@ const StaffDetail = () => {
     const response = await staffService.deleteStaff(staff);
     console.log(response);
     message.warning(`${staff.firstName + " " + staff.lastName} silindi!`);
-    navigate('/staff');
+    navigate("/staff");
   };
 
   const { staffId } = useParams();
@@ -37,8 +58,28 @@ const StaffDetail = () => {
     }
   };
 
+  const getAllAcceptedAppointmentsByStaff = async (staffId) => {
+    try {
+      const response = await appointmentService.getAllAcceptedAppointmentsByStaff(staffId);
+      setAcceptedAppointments(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getTotalEarningsByStaff = async (staffId) => {
+    try {
+      const response = await appointmentService.getTotalEarningsByStaff(staffId);
+      setTotalEarning(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   useEffect(() => {
     getStaffById();
+    getTotalEarningsByStaff(staffId);
+    getAllAcceptedAppointmentsByStaff(staffId);
   }, [staffId]);
 
   useEffect(() => {
@@ -63,8 +104,10 @@ const StaffDetail = () => {
   ];
 
   if (!staff) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
+
+  const formatter = (value) => <CountUp end={value} separator="," />;
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
@@ -149,11 +192,11 @@ const StaffDetail = () => {
                 <Input.Password />
               </Form.Item>
               <Form.Item
-               label="Image"
-               name="imagePath"
-               rules={[
-                 { required: true, message: "Please input the image path!" },
-               ]}
+                label="Image"
+                name="imagePath"
+                rules={[
+                  { required: true, message: "Please input the image path!" },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -179,7 +222,10 @@ const StaffDetail = () => {
                   okText="Evet"
                   cancelText="Hayır"
                 >
-                  <Button type="primary" style={{ marginLeft: 8, backgroundColor: "firebrick" }}>
+                  <Button
+                    type="primary"
+                    style={{ marginLeft: 8, backgroundColor: "firebrick" }}
+                  >
                     Sil
                   </Button>
                 </Popconfirm>
@@ -190,11 +236,28 @@ const StaffDetail = () => {
 
         {/* Yapılan İşlemler ve İzinler */}
         <Col span={12}>
-          <Card title="Yapılan İşlemler" style={{ width: "100%" }}>
-            <Table dataSource={data} columns={columns} size="small" />
+          <Card style={{ width: "100%" }}>
+            <Row gutter={16}>
+              <Col span={12}>
+              <Statistic
+                  title="Toplam İşlem"
+                  value={acceptedAppointments.length}
+                  precision={2}
+                  formatter={formatter}
+                />
+                
+              </Col>
+              <Col span={12}>
+              <Statistic
+                  title="Toplam Kazanç"
+                  value={totalEarning}
+                  formatter={formatter}
+                />
+              </Col>
+            </Row>
           </Card>
 
-          <Card title="Son İşlemler" style={{ width: "100%" }}>
+          <Card title="Hizmetler" style={{ width: "100%" }}>
             <Table dataSource={data} columns={columns} size="small" />
           </Card>
 
