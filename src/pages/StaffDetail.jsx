@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Form,
-  Input,
   Button,
-  Select,
   Row,
   Col,
   Card,
@@ -14,46 +12,39 @@ import {
   Space,
 } from "antd";
 import CountUp from "react-countup";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import moment from "moment";
+import "moment/locale/tr";
 
 import StaffService from "../api/StaffService.ts";
 import AppointmentService from "../api/AppointmentService.ts";
 import StaffCareServiceService from "../api/StaffCareServiceService.ts";
 import EditStaffCareServiceModal from "../components/EditStaffCareServiceModal.jsx";
-
-const { Option } = Select;
+import { PermissionService } from "../api/PermissionService.ts";
+import EditPermissionModal from "../components/EditPermissionModal.jsx";
+import StaffForm from "../components/StaffForm.jsx";
 
 //Services
 const staffService = new StaffService();
 const appointmentService = new AppointmentService();
 const staffCareServiceService = new StaffCareServiceService();
+const permissionService = new PermissionService();
 
 const StaffDetail = () => {
   //States
-  const [staff, setStaff] = useState({});
+  const [staff, setStaff] = useState(null);
   const [totalEarning, setTotalEarning] = useState(0);
   const [acceptedAppointments, setAcceptedAppointments] = useState([]);
   const [staffCareServices, setStaffCareServices] = useState([]);
+  const [permissions, setPermissions] = useState([]);
   const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editPermissionModalVisible, setEditPermissionModalVisible] =
+    useState(false);
   const [selectedStaffCareService, setSelectedStaffCareService] = useState({});
+  const [selectedPermission, setSelectedPermission] = useState({});
 
   const [form] = Form.useForm();
-  const navigate = useNavigate();
-
-  const onFinish = async (values) => {
-    const response = await staffService.updateStaff({ ...values, staffId });
-    message.success(`Personel güncellendi!`);
-    console.log(response);
-    console.log("Received values:", values);
-  };
-
-  const handleDelete = async () => {
-    const response = await staffService.deleteStaff(staff);
-    console.log(response);
-    message.warning(`${staff.firstName + " " + staff.lastName} silindi!`);
-    navigate("/staff");
-  };
 
   const { staffId } = useParams();
 
@@ -71,6 +62,15 @@ const StaffDetail = () => {
       const response =
         await appointmentService.getAllAcceptedAppointmentsByStaff(staffId);
       setAcceptedAppointments(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getAllPermissionsByStaff = async (staffId) => {
+    try {
+      const response = await permissionService.getAllByStaff(staffId);
+      setPermissions(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -96,6 +96,12 @@ const StaffDetail = () => {
     }
   };
 
+  const handleEditPermission = (record) => {
+    console.log("TEST STAFF DETAIL", record)
+    setSelectedPermission(record);
+    setEditPermissionModalVisible(true);
+  } 
+
   const handleEditStaffCareService = (record) => {
     setSelectedStaffCareService(record);
     setEditModalVisible(true);
@@ -106,10 +112,17 @@ const StaffDetail = () => {
     values.careServiceId = selectedStaffCareService.careService.careServiceId;
     values.staffId = selectedStaffCareService.staff.staffId;
 
-    const response = await staffCareServiceService.updateStaffCareService(values);
+    const response = await staffCareServiceService.updateStaffCareService(
+      values
+    );
     message.success("Güncellendi!");
     console.log("Güncelleme işlemi:", values);
-    console.log(selectedStaffCareService)
+    console.log(response);
+    setEditModalVisible(false);
+  };
+
+  const handleUpdatePermission = async (values) => {
+    
     setEditModalVisible(false);
   };
 
@@ -119,6 +132,16 @@ const StaffDetail = () => {
       record
     );
     console.log(response);
+    message.success(`silindi!`);
+  };
+  const onPermissionDeleteCancel = (e) => {
+    message.error("İptal edildi!");
+  };
+
+  const onPermissionDeleteConfirm = async (record) => {
+    console.log(record);
+    await permissionService.deletePermission(record);
+    getAllPermissionsByStaff(staffId);
     message.success(`silindi!`);
   };
   const onCareServiceDeleteCancel = (e) => {
@@ -135,9 +158,25 @@ const StaffDetail = () => {
   useEffect(() => {
     // staff state'i değiştiğinde formun başlangıç değerlerini güncelle
     form.setFieldsValue(staff);
-  }, [staff]);
+  }, [staff, form]);
 
-  const columns = [
+  useEffect(() => {
+    getAllPermissionsByStaff(staffId);
+  }, [staffId]);
+
+  const formatPermissionDate = (dateString) => {
+    const formattedDate = moment(dateString, "YYYYMMDDHHmmssSSS").locale("tr").format(
+      "YYYY-MM-DD HH:mm:ss"
+    );
+    return formattedDate;
+  };
+
+  const formatPermissionHour = (hourString) => {
+    const formattedHour = moment(hourString, "HHmm").format("HH:mm");
+    return formattedHour;
+  };
+
+  const serviceColumns = [
     {
       title: "Hizmet",
       dataIndex: ["careService", "careServiceName"],
@@ -182,6 +221,63 @@ const StaffDetail = () => {
     },
   ];
 
+  const permissionColumns = [
+    {
+      title: "Tarih",
+      dataIndex: "permissionDate",
+      key: "permissionDate",
+      render: (text) => formatPermissionDate(text),
+    },
+    {
+      title: "Saat Aralığı",
+      key: "timeRange",
+      render: (text, record) => (
+        <>
+          {formatPermissionHour(record.permissionStartHour) +
+            "-" +
+            formatPermissionHour(record.permissionEndHour)}
+        </>
+      ),
+    },
+    { title: "Sebep", dataIndex: "permissionReason", key: "permissionReason" },
+    {
+      title: "Durum",
+      dataIndex: "status",
+      key: "status",
+    },
+    {
+      title: "İşlemler",
+      key: "edit",
+      render: (text, record) => (
+        <>
+          <Space size="middle">
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              onClick={() => handleEditPermission(record)}
+            />
+          </Space>
+          <Space size="middle">
+            <Popconfirm
+              title="Sil"
+              description="Silmek istediğinize emin misiniz?"
+              onConfirm={() => onPermissionDeleteConfirm(record)}
+              onCancel={onPermissionDeleteCancel}
+              okText="Evet"
+              cancelText="İptal"
+            >
+              <Button
+                type="primary"
+                style={{ backgroundColor: "firebrick", marginLeft: 5 }}
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
+          </Space>
+        </>
+      ),
+    },
+  ];
+
   if (!staff) {
     return <div>Loading...</div>;
   }
@@ -200,116 +296,7 @@ const StaffDetail = () => {
                 {staff ? staff.firstName + " " + staff.lastName : "Loading..."}
               </h2>
             </div>
-
-            <Form
-              name="userForm"
-              initialValues={staff}
-              onFinish={onFinish}
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              form={form}
-            >
-              <Form.Item
-                label="Ad"
-                name="firstName"
-                rules={[
-                  { required: true, message: "Please input your first name!" },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Soyad"
-                name="lastName"
-                rules={[
-                  { required: true, message: "Please input your last name!" },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Eposta"
-                name="email"
-                rules={[
-                  {
-                    required: true,
-                    type: "email",
-                    message: "Please enter a valid email!",
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Telefon Numarası"
-                name="phoneNumber"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your phone number!",
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Kullanıcı Adı"
-                name="userName"
-                rules={[
-                  { required: true, message: "Please input your username!" },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Parola"
-                name="password"
-                rules={[
-                  { required: true, message: "Please input your password!" },
-                ]}
-              >
-                <Input.Password />
-              </Form.Item>
-              <Form.Item
-                label="Fotoğraf"
-                name="imagePath"
-                rules={[
-                  { required: true, message: "Please input the image path!" },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Rol"
-                name="role"
-                rules={[{ required: true, message: "Please select a role!" }]}
-              >
-                <Select>
-                  <Option value="0">Admin</Option>
-                  <Option value="1">Staff</Option>
-                </Select>
-              </Form.Item>
-
-              {/* Submit Button */}
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button type="primary" htmlType="submit">
-                  Kaydet
-                </Button>
-                <Popconfirm
-                  title="Personeli silmek istediğinizden emin misiniz?"
-                  onConfirm={handleDelete}
-                  okText="Evet"
-                  cancelText="Hayır"
-                >
-                  <Button
-                    type="primary"
-                    style={{ marginLeft: 8, backgroundColor: "firebrick" }}
-                  >
-                    Sil
-                  </Button>
-                </Popconfirm>
-              </Form.Item>
-            </Form>
+            <StaffForm staff={staff} staffService={staffService}/>
           </Card>
         </Col>
 
@@ -338,7 +325,7 @@ const StaffDetail = () => {
           <Card title="Hizmetler" style={{ width: "100%" }}>
             <Table
               dataSource={staffCareServices}
-              columns={columns}
+              columns={serviceColumns}
               size="small"
               rowKey={(record) => record.staffCareServiceId}
             />
@@ -352,7 +339,19 @@ const StaffDetail = () => {
           </Card>
 
           <Card title="İzinler" style={{ width: "100%" }}>
-            <Table dataSource={null} columns={columns} size="small" />
+            <Table
+              dataSource={permissions}
+              columns={permissionColumns}
+              size="small"
+              rowKey={(record) => record.permissionId}
+            />
+    
+            <EditPermissionModal
+              visible={editPermissionModalVisible}
+              onCancel={() => setEditPermissionModalVisible(false)}
+              onUpdate={handleUpdatePermission}
+              initialValues={selectedPermission}
+            ></EditPermissionModal>
           </Card>
         </Col>
       </Row>
