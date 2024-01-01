@@ -4,3 +4,5 @@ export enum Status{
 	DECLINED,
 	CANCELLED
 }
+
+export default Status;

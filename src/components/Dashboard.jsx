@@ -1,7 +1,7 @@
 import { Layout } from "antd";
 
 import { Content } from "antd/es/layout/layout";
-import React, {  useState } from "react";
+import React, {  useEffect, useState } from "react";
 
 import "../styles/Dashboard.css";
 import AdminFooter from "./AdminFooter";
@@ -9,8 +9,10 @@ import { Route, Routes } from "react-router-dom";
 import UserForm from "./UserForm";
 import StaffDetail from "../pages/StaffDetail";
 import CareService from "../pages/CareService";
+import Permissions from "../pages/Permissions";
 import Staff from "../pages/Staff";
 import Sidebar from "./Sidebar";
+import StaffConfigs from "../pages/StaffConfigs";
 
 function Dashboard() {
   
@@ -32,6 +34,8 @@ function Dashboard() {
             <Route path="/staff/add" element={<UserForm />} />
             <Route path="/staff/:staffId" element={<StaffDetail />} />
             <Route path="/care-services" element={<CareService />} />
+            <Route path="/permissions" element={<Permissions />} />
+            <Route path="/staffconfigs" element={<StaffConfigs />} />
           </Routes>
         </Content>
 

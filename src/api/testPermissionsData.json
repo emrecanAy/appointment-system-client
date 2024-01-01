@@ -1,0 +1,227 @@
+[
+  {
+    "key": "1",
+    "staffFullName": "John Doe",
+    "permissionDate": "2024-01-01",
+    "permissionStartHour": "09:00",
+    "permissionEndHour": "17:00",
+    "permissionReason": "Vacation",
+    "status": "WAITING"
+  },
+  {
+    "key": "2",
+    "staffFullName": "Jane Smith",
+    "permissionDate": "2024-02-15",
+    "permissionStartHour": "08:30",
+    "permissionEndHour": "16:30",
+    "permissionReason": "Conference",
+    "status": "DECLINED"
+  },
+  {
+    "key": "3",
+    "staffFullName": "Robert Johnson",
+    "permissionDate": "2024-03-10",
+    "permissionStartHour": "10:00",
+    "permissionEndHour": "18:00",
+    "permissionReason": "Family Event",
+    "status": "WAITING"
+  },
+  {
+    "key": "4",
+    "staffFullName": "Emily Davis",
+    "permissionDate": "2024-04-05",
+    "permissionStartHour": "11:30",
+    "permissionEndHour": "19:30",
+    "permissionReason": "Personal Day",
+    "status": "CANCELLED"
+  },
+  {
+    "key": "5",
+    "staffFullName": "Michael Wilson",
+    "permissionDate": "2024-05-20",
+    "permissionStartHour": "09:00",
+    "permissionEndHour": "17:00",
+    "permissionReason": "Training",
+    "status": "ACCEPTED"
+  },
+  {
+    "key": "6",
+    "staffFullName": "Sophia Brown",
+    "permissionDate": "2024-06-12",
+    "permissionStartHour": "12:00",
+    "permissionEndHour": "20:00",
+    "permissionReason": "Medical Appointment",
+    "status": "CANCELLED"
+  },
+  {
+    "key": "7",
+    "staffFullName": "Daniel Miller",
+    "permissionDate": "2024-07-03",
+    "permissionStartHour": "08:00",
+    "permissionEndHour": "16:00",
+    "permissionReason": "Business Trip",
+    "status": "WAITING"
+  },
+  {
+    "key": "8",
+    "staffFullName": "Olivia Davis",
+    "permissionDate": "2024-08-18",
+    "permissionStartHour": "09:30",
+    "permissionEndHour": "17:30",
+    "permissionReason": "Vacation",
+    "status": "ACCEPTED"
+  },
+  {
+    "key": "9",
+    "staffFullName": "Ethan White",
+    "permissionDate": "2024-09-22",
+    "permissionStartHour": "10:30",
+    "permissionEndHour": "18:30",
+    "permissionReason": "Personal Day",
+    "status": "DECLINED"
+  },
+  {
+    "key": "10",
+    "staffFullName": "Ava Johnson",
+    "permissionDate": "2024-10-09",
+    "permissionStartHour": "11:00",
+    "permissionEndHour": "19:00",
+    "permissionReason": "Training",
+    "status": "CANCELLED"
+  },
+  {
+    "key": "11",
+    "staffFullName": "James Taylor",
+    "permissionDate": "2024-11-25",
+    "permissionStartHour": "08:45",
+    "permissionEndHour": "16:45",
+    "permissionReason": "Family Event",
+    "status": "WAITING"
+  },
+  {
+    "key": "12",
+    "staffFullName": "Isabella Clark",
+    "permissionDate": "2024-12-14",
+    "permissionStartHour": "12:30",
+    "permissionEndHour": "20:30",
+    "permissionReason": "Medical Appointment",
+    "status": "ACCEPTED"
+  },
+  {
+    "key": "13",
+    "staffFullName": "Mason Moore",
+    "permissionDate": "2025-01-28",
+    "permissionStartHour": "09:15",
+    "permissionEndHour": "17:15",
+    "permissionReason": "Business Trip",
+    "status": "CANCELLED"
+  },
+  {
+    "key": "14",
+    "staffFullName": "Ella Harris",
+    "permissionDate": "2025-02-09",
+    "permissionStartHour": "08:15",
+    "permissionEndHour": "16:15",
+    "permissionReason": "Vacation",
+    "status": "WAITING"
+  },
+  {
+    "key": "15",
+    "staffFullName": "Logan Martinez",
+    "permissionDate": "2025-03-03",
+    "permissionStartHour": "10:15",
+    "permissionEndHour": "18:15",
+    "permissionReason": "Personal Day",
+    "status": "ACCEPTED"
+  },
+  {
+    "key": "16",
+    "staffFullName": "Avery Turner",
+    "permissionDate": "2025-04-17",
+    "permissionStartHour": "11:45",
+    "permissionEndHour": "19:45",
+    "permissionReason": "Training",
+    "status": "DECLINED"
+  },
+  {
+    "key": "17",
+    "staffFullName": "Jackson Anderson",
+    "permissionDate": "2025-05-01",
+    "permissionStartHour": "12:15",
+    "permissionEndHour": "20:15",
+    "permissionReason": "Family Event",
+    "status": "CANCELLED"
+  },
+  {
+    "key": "18",
+    "staffFullName": "Addison Brown",
+    "permissionDate": "2025-06-20",
+    "permissionStartHour": "08:30",
+    "permissionEndHour": "16:30",
+    "permissionReason": "Medical Appointment",
+    "status": "WAITING"
+  },
+  {
+    "key": "19",
+    "staffFullName": "Mia Wilson",
+    "permissionDate": "2025-07-11",
+    "permissionStartHour": "09:00",
+    "permissionEndHour": "17:00",
+    "permissionReason": "Business Trip",
+    "status": "ACCEPTED"
+  },
+  {
+    "key": "20",
+    "staffFullName": "Carter Davis",
+    "permissionDate": "2025-08-27",
+    "permissionStartHour": "10:00",
+    "permissionEndHour": "18:00",
+    "permissionReason": "Vacation",
+    "status": "CANCELLED"
+  },
+  {
+    "key": "21",
+    "staffFullName": "Sofia Miller",
+    "permissionDate": "2025-09-15",
+    "permissionStartHour": "11:30",
+    "permissionEndHour": "19:30",
+    "permissionReason": "Personal Day",
+    "status": "WAITING"
+  },
+  {
+    "key": "22",
+    "staffFullName": "Noah Johnson",
+    "permissionDate": "2025-10-05",
+    "permissionStartHour": "08:00",
+    "permissionEndHour": "16:00",
+    "permissionReason": "Training",
+    "status": "ACCEPTED"
+  },
+  {
+    "key": "23",
+    "staffFullName": "Lily Taylor",
+    "permissionDate": "2025-11-19",
+    "permissionStartHour": "09:30",
+    "permissionEndHour": "17:30",
+    "permissionReason": "Family Event",
+    "status": "DECLINED"
+  },
+  {
+    "key": "24",
+    "staffFullName": "Elijah Clark",
+    "permissionDate": "2025-12-08",
+    "permissionStartHour": "10:30",
+    "permissionEndHour": "18:30",
+    "permissionReason": "Medical Appointment",
+    "status": "CANCELLED"
+  },
+  {
+    "key": "25",
+    "staffFullName": "Scarlett Moore",
+    "permissionDate": "2026-01-22",
+    "permissionStartHour": "11:00",
+    "permissionEndHour": "19:00",
+    "permissionReason": "Business Trip",
+    "status": "WAITING"
+  }
+]
