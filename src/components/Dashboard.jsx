@@ -13,6 +13,7 @@ import Permissions from "../pages/Permissions";
 import Staff from "../pages/Staff";
 import Sidebar from "./Sidebar";
 import StaffConfigs from "../pages/StaffConfigs";
+import AppointmentsPage from "../pages/AppointmentsPage";
 
 function Dashboard() {
   
@@ -36,6 +37,7 @@ function Dashboard() {
             <Route path="/care-services" element={<CareService />} />
             <Route path="/permissions" element={<Permissions />} />
             <Route path="/staffconfigs" element={<StaffConfigs />} />
+            <Route path="/appointments" element={<AppointmentsPage />} />
           </Routes>
         </Content>
 

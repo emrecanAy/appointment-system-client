@@ -79,7 +79,7 @@ function Sidebar({ currentUser }) {
           </Menu.Item>
         </SubMenu>
         <SubMenu key="sub1" icon={<UserOutlined />} title="Randevu İşlemleri">
-          <Menu.Item key="6">Tüm Randevular</Menu.Item>
+          <Menu.Item key="6"><Link to={"/appointments"}>Tüm Randevular</Link></Menu.Item>
           <Menu.Item key="7">Bill</Menu.Item>
           <Menu.Item key="8">Alex</Menu.Item>
         </SubMenu>

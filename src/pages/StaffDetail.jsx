@@ -337,7 +337,7 @@ const StaffDetail = () => {
               initialValues={selectedStaffCareService}
             />
           </Card>
-
+          
           <Card title="İzinler" style={{ width: "100%" }}>
             <Table
               dataSource={permissions}

@@ -10,18 +10,20 @@ import {
   Layout,
   TimePicker,
   message,
+  Row,
+  Col,
+  Typography,
 } from "antd";
 import StaffConfigService from "../api/StaffConfigService.ts";
 import moment from "moment";
-import { Content, Header } from "antd/es/layout/layout";
-import Title from "antd/es/skeleton/Title";
+import { Content } from "antd/es/layout/layout";
+const { Text } = Typography;
 
 //Services
 const staffConfigService = new StaffConfigService();
 
 const StaffConfigs = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [currentRecord, setCurrentRecord] = useState(null);
   const [searchedText, setSearchedText] = useState("");
   const [staffConfigs, setStaffConfigs] = useState(null);
 
@@ -51,7 +53,7 @@ const StaffConfigs = () => {
       },
       filteredValue: [searchedText],
       render: (text, record) => (
-        <>{formatFullName(record.staff.firstName, record.staff.lastName)}</>
+        <b>{formatFullName(record.staff.firstName, record.staff.lastName)}</b>
       ),
     },
     {
@@ -118,7 +120,7 @@ const StaffConfigs = () => {
 
   const getAllStaffConfigs = async () => {
     const response = await staffConfigService.getAllStaffConfigs();
-    console.log("LOG: ", response.data);
+    getAllStaffConfigs();
     setStaffConfigs(response.data);
   };
 
@@ -136,7 +138,6 @@ const StaffConfigs = () => {
   };
 
   const handleEdit = (record) => {
-    setCurrentRecord(record);
     setIsModalVisible(true);
   };
 
@@ -158,16 +159,17 @@ const StaffConfigs = () => {
   }
 
   return (
-    <Layout style={{ minHeight: "100vh"}}>
-      <Header
-        style={{
-          background: "#fff",
-          padding: "16px 24px",
-          textAlign: "left",
-        }}
-      >
-        <Title level={2}>İzin İşlemleri</Title>
-      </Header>
+    <Layout style={{ padding: '24px' }}>
+      <Row justify="start" align="middle">
+      <Col>
+        <Text strong style={{ fontSize: '30px' }}>Personel Ayarları</Text>
+      </Col>
+      <Col style={{marginLeft: '15px'}}>
+        <Button type="primary" style={{backgroundColor: 'green'}} >
+          Yeni Ekle
+        </Button>
+      </Col>
+    </Row>
       <Content
         style={{
           padding: "24px",

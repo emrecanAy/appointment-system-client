@@ -41,6 +41,46 @@ export class AppointmentService{
         }
     }
 
+    async setAppointmentAccepted(appointment){
+        try {
+            const response = await this.api.put(`/setstatusaccepted`, appointment);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    }
+
+    async setAppointmentWaiting(appointment){
+        try {
+            const response = await this.api.put(`/setstatuswaiting`, appointment);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    }
+
+    async setAppointmentDeclined(appointment){
+        try {
+            const response = await this.api.put(`/setstatusdeclined`, appointment);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    }
+
+    async setAppointmentCancelled(appointment){
+        try {
+            const response = await this.api.put(`/setstatuscancelled`, appointment);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    }
+
 }
 
 export default AppointmentService;

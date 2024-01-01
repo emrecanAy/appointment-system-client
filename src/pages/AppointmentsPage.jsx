@@ -13,7 +13,7 @@ import {
   TimePicker,
   Typography,
   Row,
-  Col
+  Col,
 } from "antd";
 import {
   EditOutlined,
@@ -21,25 +21,25 @@ import {
   CloseOutlined,
   ClockCircleOutlined,
 } from "@ant-design/icons";
-import { Content, Header } from "antd/es/layout/layout";
-import PermissionService from "../api/PermissionService.ts";
+import { Content } from "antd/es/layout/layout";
 import { useEffect } from "react";
 import moment from "moment";
+import AppointmentService from "../api/AppointmentService.ts";
 const { Text } = Typography;
 
-const permissionService = new PermissionService();
+const appointmentService = new AppointmentService();
 
-const PermissionTable = () => {
-  const [permissions, setPermissions] = useState([]);
+const AppointmentsPage = () => {
+  const [appointments, setAppointments] = useState([]);
   const [searchedText, setSearchedText] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [formData, setFormData] = useState({});
   const [form] = Form.useForm();
 
-  const getAllPermissions = async () => {
+  const getAllAppointments = async () => {
     try {
-      const response = await permissionService.getAllPermissions();
-      setPermissions(response.data);
+      const response = await appointmentService.getAllAppointments();
+      setAppointments(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -66,12 +66,8 @@ const PermissionTable = () => {
 
   const handleFormSubmit = async (values) => {
     try {
-      const response = await permissionService.updatePermission(
-        formData.id,
-        values
-      );
-      getAllPermissions();
-      console.log(response);
+      //UPDATE İŞLEMİ YAPCAM
+      getAllAppointments();
       message.success("İzin güncellendi.");
       setIsModalVisible(false);
     } catch (error) {
@@ -79,10 +75,10 @@ const PermissionTable = () => {
     }
   };
 
-  const setPermissionStatusAccepted = async (record) => {
+  const setAppointmentStatusAccepted = async (record) => {
     try {
-      const response = await permissionService.setStatusAccepted(record);
-      getAllPermissions();
+      const response = await appointmentService.setAppointmentAccepted(record);
+      getAllAppointments();
       console.log(response);
       message.success("İzin onaylandı.");
     } catch (error) {
@@ -90,10 +86,10 @@ const PermissionTable = () => {
     }
   };
 
-  const setPermissionStatusWaiting = async (record) => {
+  const setAppointmentStatusWaiting = async (record) => {
     try {
-      const response = await permissionService.setStatusWaiting(record);
-      getAllPermissions();
+      const response = await appointmentService.setAppointmentWaiting(record);
+      getAllAppointments();
       console.log(response);
       message.warning("İzin beklemeye alındı.");
     } catch (error) {
@@ -101,10 +97,10 @@ const PermissionTable = () => {
     }
   };
 
-  const setPermissionStatusDeclined = async (record) => {
+  const setAppointmentStatusDeclined = async (record) => {
     try {
-      const response = await permissionService.setStatusDeclined(record);
-      getAllPermissions();
+      const response = await appointmentService.setAppointmentDeclined(record);
+      getAllAppointments();
       console.log(response);
       message.error("İzin reddedildi!");
     } catch (error) {
@@ -116,52 +112,72 @@ const PermissionTable = () => {
     return `${firstName} ${lastName}`;
   };
 
+  const formatServices = (value) => {
+    const serviceNames = [];
+    value.staffCareServices.forEach((item) => {
+      serviceNames.push(item.careService.careServiceName);
+    });
+    const formattedText = serviceNames.join("-");
+    return formattedText;
+  };
+
+  const formatDuration = (value) => {
+    let totalDuration = 0;
+    value.staffCareServices.forEach((item) => {
+        totalDuration += item.careServiceDuration;
+      });
+    return totalDuration;
+  }
+
   const columns = [
     {
-      title: "Ad Soyad",
-      key: "staffFullName",
+      title: "Müşteri",
+      key: "customerFullName",
       onFilter: (value, record) => {
         return (
-          String(record.staff.firstName)
+          String(record.customer.firstName)
             .toLowerCase()
             .includes(value.toLowerCase()) ||
-          String(record.staff.lastName)
-            .toLowerCase()
-            .includes(value.toLowerCase()) ||
-          String(record.permissionReason)
-            .toLowerCase()
-            .includes(value.toLowerCase()) ||
-          String(record.status)
+          String(record.customer.lastName)
             .toLowerCase()
             .includes(value.toLowerCase())
         );
       },
       filteredValue: [searchedText],
       render: (_, record) => (
-        <b>{formatFullName(record.staff.firstName, record.staff.lastName)}</b>
+        <b>
+          {formatFullName(record.customer.firstName, record.customer.lastName)}
+        </b>
       ),
     },
     {
-      title: "İzin Tarihi",
-      dataIndex: "permissionDate",
-      key: "permissionDate",
-      render: (text) => formatPermissionDate(text),
-    },
-    {
-      title: "Saat Aralığı",
-      key: "timeRange",
-      render: (text, record) => (
-        <>
-          {formatPermissionHour(record.permissionStartHour) +
-            "-" +
-            formatPermissionHour(record.permissionEndHour)}
-        </>
+      title: "Personel",
+      key: "staffFullName",
+      render: (_, record) => (
+        <b><i>{formatFullName(record.staff.firstName, record.staff.lastName)}</i></b>
       ),
     },
     {
-      title: "Gerekçe",
-      dataIndex: "permissionReason",
-      key: "permissionReason",
+      title: "Tarih",
+      dataIndex: "appointmentDate",
+      key: "appointmentDate",
+      sorter: (a, b) => formatAppointmentDateToSort(a.appointmentDate) - formatAppointmentDateToSort(b.appointmentDate),
+      render: (text) => formatAppointmentDate(text),
+    },
+    {
+      title: "Hizmetler",
+      key: "services",
+      render: (value) => formatServices(value),
+    },
+    {
+      title: "Toplam Süre",
+      key: "totalDuration",
+      render: (value) => formatDuration(value),
+    },
+    {
+      title: "Not",
+      dataIndex: "note",
+      key: "note",
     },
     {
       title: "Durum",
@@ -200,7 +216,7 @@ const PermissionTable = () => {
               title="Onaylamak istediğinize emin misiniz?"
               okText="Evet"
               cancelText="İptal"
-              onConfirm={() => setPermissionStatusAccepted(record)}
+              onConfirm={() => setAppointmentStatusAccepted(record)}
             >
               <Button
                 type="success"
@@ -218,7 +234,7 @@ const PermissionTable = () => {
               title="Reddetmek istediğinize emin misiniz?"
               okText="Evet"
               cancelText="İptal"
-              onConfirm={() => setPermissionStatusDeclined(record)}
+              onConfirm={() => setAppointmentStatusDeclined(record)}
             >
               <Button
                 type="danger"
@@ -236,7 +252,7 @@ const PermissionTable = () => {
               title="Beklemeye almak istediğinize emin misiniz?"
               okText="Evet"
               cancelText="İptal"
-              onConfirm={() => setPermissionStatusWaiting(record)}
+              onConfirm={() => setAppointmentStatusWaiting(record)}
             >
               <Button
                 type="default"
@@ -254,41 +270,38 @@ const PermissionTable = () => {
     },
   ];
 
-  const formatPermissionDate = (dateString) => {
+  const formatAppointmentDate = (dateString) => {
     const formattedDate = moment(dateString, "YYYYMMDDHHmmssSSS")
       .locale("tr")
       .format("YYYY-MM-DD HH:mm:ss");
     return formattedDate;
   };
 
-   const testFormatPermissionDate = (dateString) => {
+  const formatAppointmentDateToSort = (dateString) => {
     const formattedDate = moment(dateString, "YYYYMMDDHH")
       .locale("tr")
-      .format("YYYY/MM/DD");
+      .format("YYYY-MM-DD");
     return formattedDate;
   };
 
-  const formatPermissionHour = (hourString) => {
-    const formattedHour = moment(hourString, "HHmm").format("HH:mm");
-    return formattedHour;
-  };
-
   useEffect(() => {
-    getAllPermissions();
+    getAllAppointments();
   }, []);
 
   return (
     <Layout style={{ padding: '24px' }}>
       <Row justify="start" align="middle">
-      <Col>
-        <Text strong style={{ fontSize: '30px' }}>İzin Talepleri</Text>
-      </Col>
-      <Col style={{marginLeft: '15px'}}>
-        <Button type="primary" style={{backgroundColor: 'green'}}>
-          Yeni Ekle
-        </Button>
-      </Col>
-    </Row>
+        <Col>
+          <Text strong style={{ fontSize: "30px" }}>
+            Randevular
+          </Text>
+        </Col>
+        <Col style={{ marginLeft: "15px" }}>
+          <Button type="primary" style={{ backgroundColor: "green" }}>
+            Yeni Ekle
+          </Button>
+        </Col>
+      </Row>
       <Content
         style={{
           padding: "24px",
@@ -302,23 +315,17 @@ const PermissionTable = () => {
           onSearch={(value) => setSearchedText(value)}
           onChange={(e) => setSearchedText(e.target.value)}
         />
-        <Table columns={columns} dataSource={permissions} />
+        <Table columns={columns} dataSource={appointments} />
       </Content>
       <Modal
-        title="İzin Güncelle"
+        title="Randevu Düzenle"
         open={isModalVisible}
         onCancel={handleCancel}
         onOk={() => form.submit()}
       >
         <Form form={form} onFinish={handleFormSubmit} initialValues={formData}>
-          <Form.Item name="permissionDate" label="İzin Tarihi">
+          <Form.Item name="appointmentDate" label="İzin Tarihi">
             <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-          </Form.Item>
-          <Form.Item name="permissionStartHour" label="Başlangıç Saati">
-            <TimePicker format="HH:mm" />
-          </Form.Item>
-          <Form.Item name="permissionEndHour" label="Bitiş Saati">
-            <TimePicker format="HH:mm" />
           </Form.Item>
           <Form.Item name="permissionReason" label="Gerekçe">
             <Input />
@@ -334,4 +341,4 @@ const PermissionTable = () => {
   );
 };
 
-export default PermissionTable;
+export default AppointmentsPage;
