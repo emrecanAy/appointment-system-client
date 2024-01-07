@@ -21,7 +21,7 @@ import {
   CloseOutlined,
   ClockCircleOutlined,
 } from "@ant-design/icons";
-import { Content, Header } from "antd/es/layout/layout";
+import { Content } from "antd/es/layout/layout";
 import PermissionService from "../api/PermissionService.ts";
 import { useEffect } from "react";
 import moment from "moment";
@@ -258,13 +258,6 @@ const PermissionTable = () => {
     const formattedDate = moment(dateString, "YYYYMMDDHHmmssSSS")
       .locale("tr")
       .format("YYYY-MM-DD HH:mm:ss");
-    return formattedDate;
-  };
-
-   const testFormatPermissionDate = (dateString) => {
-    const formattedDate = moment(dateString, "YYYYMMDDHH")
-      .locale("tr")
-      .format("YYYY/MM/DD");
     return formattedDate;
   };
 

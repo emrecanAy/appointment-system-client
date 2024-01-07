@@ -1,0 +1,16 @@
+@media (max-width: 768px) {
+    .main-menu {
+      display: none;
+    }
+  
+    .header-right-btn {
+      margin-left: 15px;
+    }
+  
+    .mobile_menu {
+      display: block;
+    }
+  }
+  
+  /* Add any additional styling for larger screens if needed */
+  

@@ -119,9 +119,12 @@ const StaffConfigs = () => {
   ];
 
   const getAllStaffConfigs = async () => {
-    const response = await staffConfigService.getAllStaffConfigs();
-    getAllStaffConfigs();
-    setStaffConfigs(response.data);
+    try {
+      const response = await staffConfigService.getAllStaffConfigs();
+      setStaffConfigs(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -144,7 +147,7 @@ const StaffConfigs = () => {
   const handleDelete = async (record) => {
     await staffConfigService.deleteStaffConfig(record);
     message.success("Silindi!");
-  }
+  };
 
   const handleOk = () => {
     setIsModalVisible(false);
@@ -159,17 +162,19 @@ const StaffConfigs = () => {
   }
 
   return (
-    <Layout style={{ padding: '24px' }}>
+    <Layout style={{ padding: "24px" }}>
       <Row justify="start" align="middle">
-      <Col>
-        <Text strong style={{ fontSize: '30px' }}>Personel Ayarları</Text>
-      </Col>
-      <Col style={{marginLeft: '15px'}}>
-        <Button type="primary" style={{backgroundColor: 'green'}} >
-          Yeni Ekle
-        </Button>
-      </Col>
-    </Row>
+        <Col>
+          <Text strong style={{ fontSize: "30px" }}>
+            Personel Ayarları
+          </Text>
+        </Col>
+        <Col style={{ marginLeft: "15px" }}>
+          <Button type="primary" style={{ backgroundColor: "green" }}>
+            Yeni Ekle
+          </Button>
+        </Col>
+      </Row>
       <Content
         style={{
           padding: "24px",

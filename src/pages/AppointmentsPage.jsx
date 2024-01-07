@@ -10,7 +10,6 @@ import {
   Form,
   Modal,
   DatePicker,
-  TimePicker,
   Typography,
   Row,
   Col,
@@ -36,7 +35,7 @@ const AppointmentsPage = () => {
   const [formData, setFormData] = useState({});
   const [form] = Form.useForm();
 
-  const getAllAppointments = async () => {
+  const getAllAppointments = async () => { 
     try {
       const response = await appointmentService.getAllAppointments();
       setAppointments(response.data);

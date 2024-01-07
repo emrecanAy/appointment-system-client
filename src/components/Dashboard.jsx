@@ -1,7 +1,7 @@
 import { Layout } from "antd";
 
 import { Content } from "antd/es/layout/layout";
-import React, {  useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import "../styles/Dashboard.css";
 import AdminFooter from "./AdminFooter";
