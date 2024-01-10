@@ -80,7 +80,7 @@ function Staff() {
       </Row>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
         {staffs.map((staff) => (
-          <Link key={staff.staffId} to={`/staff/${staff.staffId}`}>
+          <Link key={staff.staffId} to={`${staff.staffId}`}>
             <StaffCard staff={staff} staffCareServices={staffCareServices}/>
           </Link>
         ))}

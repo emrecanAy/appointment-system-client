@@ -24,7 +24,7 @@ export class StaffConfigService{
     
     async getStaffConfigById(staffConfigId: string){
         try {
-            const response = await this.api.get(`/${staffConfigId}`);
+            const response = await this.api.get(`/staff/${staffConfigId}`);
             return response.data;
         } catch (error) {
             console.log("API error: ", error);

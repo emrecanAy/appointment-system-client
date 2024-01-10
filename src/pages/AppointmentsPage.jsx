@@ -67,7 +67,7 @@ const AppointmentsPage = () => {
     try {
       //UPDATE İŞLEMİ YAPCAM
       getAllAppointments();
-      message.success("İzin güncellendi.");
+      message.success("Randevu güncellendi.");
       setIsModalVisible(false);
     } catch (error) {
       console.log(error);
@@ -79,7 +79,7 @@ const AppointmentsPage = () => {
       const response = await appointmentService.setAppointmentAccepted(record);
       getAllAppointments();
       console.log(response);
-      message.success("İzin onaylandı.");
+      message.success("Randevu onaylandı.");
     } catch (error) {
       console.log(error);
     }
@@ -90,7 +90,7 @@ const AppointmentsPage = () => {
       const response = await appointmentService.setAppointmentWaiting(record);
       getAllAppointments();
       console.log(response);
-      message.warning("İzin beklemeye alındı.");
+      message.warning("Randevu beklemeye alındı.");
     } catch (error) {
       console.log(error);
     }
@@ -101,7 +101,7 @@ const AppointmentsPage = () => {
       const response = await appointmentService.setAppointmentDeclined(record);
       getAllAppointments();
       console.log(response);
-      message.error("İzin reddedildi!");
+      message.error("Randevu reddedildi!");
     } catch (error) {
       console.log(error);
     }

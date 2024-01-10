@@ -32,6 +32,31 @@ export class CareServiceService{
             throw error;
         }
     }
+
+    async getStaffByEmail(email: string): Promise<Staff>{
+        try {
+            const response: AxiosResponse<Staff> = await this.api.get(`/email/${email}`);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    }
+
+    async getStaffByEmailAndPassword(email, password): Promise<Staff>{
+        try {
+            const response: AxiosResponse<Staff> = await this.api.get(`/email-password`, {
+                params: {
+                    email: email,
+                    password: password
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    }
     
     async createStaff (staff: Staff): Promise<Staff>{
         try {

@@ -31,6 +31,16 @@ export class AppointmentService{
         }
     };
 
+    async getAllAcceptedAndWaitingAppointmentsByStaff(staffId: string){
+        try {
+            const response = await this.api.get(`/getallwaitingandaccepted/staff/${staffId}`);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    };
+
     async getTotalEarningsByStaff(staffId: string){
         try {
             const response = await this.api.get(`/check-total-earning/${staffId}`);

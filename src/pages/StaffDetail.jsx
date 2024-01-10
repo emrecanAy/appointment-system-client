@@ -161,6 +161,7 @@ const StaffDetail = () => {
   }, [staff, form]);
 
   useEffect(() => {
+    console.log(1299,"STAFF DETAIL ÇALIŞTI!")
     getAllPermissionsByStaff(staffId);
   }, [staffId]);
 

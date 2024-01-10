@@ -1,0 +1,76 @@
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100vh;
+    background-image: url('https://img.freepik.com/free-photo/comb-scissor-set-copy-space_23-2148352909.jpg?w=1380&t=st=1704664817~exp=1704665417~hmac=ca09dd77ffed1bc55ed45d362d717f3173bec26e1629a21dff0d0b91f4e27162');
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .login-form {
+    width: 300px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .login-title {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 24px;
+  }
+  
+  .login-form-forgot {
+    float: right;
+    color: black;
+  }
+  
+  .login-form-button {
+    width: 100%;
+    background-color: black;
+  }
+
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: firebrick;
+    border-color: firebrick;
+  }
+  
+  .login-buttons-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px; /* Adjust the margin as needed */
+  }
+
+  .custom-radio-group .ant-radio-button-wrapper {
+    background-color: white;
+    color: black;
+  }
+  
+  .custom-radio-group .ant-radio-button-wrapper-checked {
+    background-color: #ff4d4f !important;
+    color: white !important;
+  }
+
+  .custom-radio-group .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    border-color: white;
+  }
+
+  .custom-radio-group .ant-radio-button-wrapper:hover:not(.ant-radio-button-wrapper-checked) {
+    border-color: white
+  }
+
+  .custom-radio-group .ant-radio-button-wrapper:active {
+    box-shadow: 0 0 0 2px white;
+  }
+
+  .custom-radio-group .ant-radio-button-wrapper:checked:hover {
+    border-color: white
+  }
+
+  .ant-input:focus, .ant-input-focused {
+    border-color: black !important;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2); /* İsteğe bağlı: Odaklandığında gölge eklemek */
+  }

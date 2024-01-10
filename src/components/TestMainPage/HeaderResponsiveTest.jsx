@@ -2,10 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./HeaderResponsive.css";
 
-function Header() {
+function HeaderResponsiveTest() {
   return (
     <header>
-      <div className="header-area header-transparent pt-20">
+      <div className="header-area header-transparent pt-20" style={{backgroundColor: "black"}}>
         <div className="main-header header-sticky">
           <div className="container-fluid">
             <div className="row align-items-center">
@@ -84,4 +84,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default HeaderResponsiveTest;
