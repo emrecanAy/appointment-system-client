@@ -1,4 +1,4 @@
-import { Checkbox, DatePicker, Table } from "antd";
+import { Checkbox, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import StaffCareServiceService from "../../api/StaffCareServiceService.ts";
@@ -7,7 +7,6 @@ import AppointmentScheduler from "../AppointmentSchedular.jsx";
 const staffCareServiceService = new StaffCareServiceService();
 
 function StaffAppointmentLogic({ staff }) {
-  const [selectedDate, setSelectedDate] = useState(null);
   const [staffCareServices, setStaffCareServices] = useState([]);
 
   const getAllServicesByStaff = async (staffId) => {
