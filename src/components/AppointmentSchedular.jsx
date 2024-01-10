@@ -1,7 +1,8 @@
-import { DatePicker, Radio } from "antd";
+import { Button, DatePicker, Input, Radio } from "antd";
 import React, { useEffect, useState } from "react";
 import StaffConfigService from "../api/StaffConfigService.ts";
 import AppointmentService from "../api/AppointmentService.ts";
+import TextArea from "antd/es/input/TextArea";
 
 const appointmentService = new AppointmentService();
 const staffConfigService = new StaffConfigService();
@@ -15,6 +16,7 @@ const AppointmentScheduler = ({ staffId }) => {
   const [filteredData, setFilteredData] = useState(
     waitingAndAcceptedAppointments
   );
+  const [notes, setNotes] = useState("");
 
   const [startShiftHour, setStartShiftHour] = useState(null);
   const [endShiftHour, setEndShiftHour] = useState(null);
@@ -30,11 +32,19 @@ const AppointmentScheduler = ({ staffId }) => {
   //   const testbreakHour = new Date(null, null, null, 13, 0);
 
   const filterData = (data, dateString) => {
-    const result = data.filter(item => {
-        const date = item.appointmentDate;
-        const jsDate = new Date(date[0], date[1] - 1, date[2]-6, date[3], date[4], date[5], date[6]);
-        const formattedDate = jsDate.toISOString().split('T')[0];
-        return formattedDate === dateString
+    const result = data.filter((item) => {
+      const date = item.appointmentDate;
+      const jsDate = new Date(
+        date[0],
+        date[1] - 1,
+        date[2] - 6,
+        date[3],
+        date[4],
+        date[5],
+        date[6]
+      );
+      const formattedDate = jsDate.toISOString().split("T")[0];
+      return formattedDate === dateString;
     });
 
     return result;
@@ -65,8 +75,6 @@ const AppointmentScheduler = ({ staffId }) => {
       // Mola zamanı değilse
       if (!isBreakTime) {
         // Mevcut saati appointments dizisine ekle
-
-
         appointments.push(new Date(currentHour));
       }
       // Mevcut saati slotInterval kadar ileri al
@@ -113,6 +121,10 @@ const AppointmentScheduler = ({ staffId }) => {
     }
   };
 
+  const handleNotesChange = (e) => {
+    setNotes(e.target.value);
+  };
+
   useEffect(() => {
     getStaffConfigByStaff(staffId);
     getAllAppointmentsByStaff(staffId);
@@ -135,6 +147,64 @@ const AppointmentScheduler = ({ staffId }) => {
 
   const appointments = generateAppointments();
 
+  const filterBookedHours = () => {
+    filteredData.forEach(function (appointment) {
+      console.log("TOTAL DURATION: ", appointment.totalDuration);
+      var index = appointments.findIndex(function (time) {
+        return (
+          time.getHours() ===
+            parseInt(appointment.appointmentHour.split(":")[0]) &&
+          time.getMinutes() ===
+            parseInt(appointment.appointmentHour.split(":")[1])
+        );
+      });
+
+      if (index !== -1) {
+        // appointmentHour üzerine totalDuration ekleyerek yeni bir saat oluştur
+        var oldHour = new Date(appointments[index]);
+        var newHour = new Date(appointments[index]);
+        newHour.setMinutes(newHour.getMinutes() + appointment.totalDuration);
+        console.log("YENİ SAAT: ", newHour);
+        console.log("ESKİ SAAT: ", oldHour);
+
+        const hoursToDelete = [];
+        // oldHour'un değerini değiştirmemek için kopyasını al
+        var currentHour = new Date(oldHour);
+        while (
+          currentHour <=
+          newHour.setMinutes(newHour.getMinutes() - slotSpacing / 2)
+        ) {
+          // currentHour'u değiştirmemek için kopyasını al
+          hoursToDelete.push(new Date(currentHour));
+          currentHour.setMinutes(currentHour.getMinutes() + slotSpacing);
+          console.log("CURRENT HOUR: ", currentHour);
+        }
+
+        // hoursToDelete içindeki saatleri appointments dizisinden sil
+        hoursToDelete.forEach(function (deleteHour) {
+          var deleteIndex = appointments.findIndex(function (time) {
+            return (
+              time.getHours() === deleteHour.getHours() &&
+              time.getMinutes() === deleteHour.getMinutes()
+            );
+          });
+
+          if (deleteIndex !== -1) {
+            appointments.splice(deleteIndex, 1);
+          }
+        });
+      }
+
+      if (index !== -1) {
+        appointments.splice(index, 1);
+      }
+    });
+
+    console.log("Hadi aslanım benim!: ", appointments);
+  };
+
+  filterBookedHours();
+
   return (
     <div>
       {!loading && staffConfig && appointments.length > 0 ? (
@@ -147,6 +217,8 @@ const AppointmentScheduler = ({ staffId }) => {
                 style={{ marginBottom: "20px" }}
               />
             </div>
+
+            <h2>Uygun Randevu Saatleri</h2>
 
             <Radio.Group buttonStyle="solid" style={{ marginBottom: "20px" }}>
               {appointments.map((appointment) => (
@@ -167,6 +239,10 @@ const AppointmentScheduler = ({ staffId }) => {
             </Radio.Group>
           </div>
           <p>Seçilen Randevu Saati: {selectedAppointment}</p>
+
+          <TextArea rows={4} placeholder="Notlarınızı ekleyin" maxLength={6} style={{maxWidth: "500px"}}/>
+          <br/><br/>
+          <Button>Randevu Oluştur</Button>
         </>
       ) : (
         <div></div>

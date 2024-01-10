@@ -70,7 +70,6 @@ function StaffAppointmentLogic({ staff }) {
       
 
       <div>
-        <h2>Randevu Saatleri</h2>
         <AppointmentScheduler staffId={staff.staffId}/>
       </div>
     </div>
