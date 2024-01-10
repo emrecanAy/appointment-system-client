@@ -1,4 +1,4 @@
-import { Button, DatePicker, Input, Radio } from "antd";
+import { Button, DatePicker, Radio } from "antd";
 import React, { useEffect, useState } from "react";
 import StaffConfigService from "../api/StaffConfigService.ts";
 import AppointmentService from "../api/AppointmentService.ts";
@@ -12,7 +12,6 @@ const AppointmentScheduler = ({ staffId }) => {
   const [loading, setLoading] = useState(true);
   const [waitingAndAcceptedAppointments, setWaitingAndAcceptedAppointments] =
     useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
   const [filteredData, setFilteredData] = useState(
     waitingAndAcceptedAppointments
   );
@@ -240,8 +239,8 @@ const AppointmentScheduler = ({ staffId }) => {
           </div>
           <p>Seçilen Randevu Saati: {selectedAppointment}</p>
 
-          <TextArea rows={4} placeholder="Notlarınızı ekleyin" maxLength={6} style={{maxWidth: "500px"}}/>
-          <br/><br/>
+          <TextArea onChange={handleNotesChange} rows={4} placeholder="Notlarınızı ekleyin" maxLength={6} style={{maxWidth: "500px"}}/>
+          <br/><br/>{notes}
           <Button>Randevu Oluştur</Button>
         </>
       ) : (
