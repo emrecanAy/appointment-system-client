@@ -30,7 +30,12 @@ const AppointmentScheduler = ({ staffId }) => {
   //   const slotInterval = 30;
   //   const testbreakHour = new Date(null, null, null, 13, 0);
 
-  const filterData = (data, dateString) => {
+  const deprecatedFilterData = (data, dateString) => {
+    console.log(
+      "WAİTİNG ACCEPTED APPOINTMENTS: ",
+      waitingAndAcceptedAppointments
+    );
+    console.log("DATE STRİNG", dateString);
     const result = data.filter((item) => {
       const date = item.appointmentDate;
       const jsDate = new Date(
@@ -42,12 +47,37 @@ const AppointmentScheduler = ({ staffId }) => {
         date[5],
         date[6]
       );
-      const formattedDate = jsDate.toISOString().split("T")[0];
-      return formattedDate === dateString;
+      // Saat, dakika, saniye ve milisaniyeyi sıfırla
+      jsDate.setHours(0, 0, 0, 0);
+      // Karşılaştırılacak tarih nesnesini de sıfırla
+      const compareDate = new Date(dateString);
+      compareDate.setHours(0, 0, 0, 0);
+      // Zaman damgalarını karşılaştır
+      return jsDate.getTime() === compareDate.getTime();
     });
 
     return result;
   };
+
+  const filterData = (data, dateString) => {
+    // Veriyi filter metodu ile filtreleyelim
+    var sonuc = data.filter(function (eleman) {
+      // Her bir elemanın appointmentDate özelliğinin ilk üç elemanını alalım
+      var yil = eleman.appointmentDate[0];
+      var ay = eleman.appointmentDate[1];
+      var gun = eleman.appointmentDate[2];
+      // Bu değerlerden yeni bir tarih nesnesi oluşturalım
+      var elemanTarihi = new Date(yil, ay - 1, gun + 1); // Ay değeri 0'dan başladığı için 1 çıkardık
+      // Elemanın tarihini istenen tarih ile karşılaştıralım
+      console.log("KONTROL TARİHİ: ", elemanTarihi.toISOString().slice(0, 10));
+      console.log("İSTENEN TARİH: ", dateString);
+      return elemanTarihi.toISOString().slice(0, 10) === dateString;
+    });
+
+    console.log("TEST FİLTER DATA: ", sonuc);
+    return sonuc;
+  };
+
   const generateAppointments = () => {
     const appointments = [];
 
@@ -61,7 +91,7 @@ const AppointmentScheduler = ({ staffId }) => {
     }
 
     var currentHour = new Date(startShiftHour); // Mevcut saati tutan değişken
-    while (currentHour < endShiftHour) {
+    while (currentHour <= endShiftHour) {
       // Mevcut saatin mola saatleri arasında olup olmadığını kontrol et
       var isBreakTime = false; // Mola zamanı olup olmadığını tutan değişken
       var breakStart = new Date(breakHour); // Mola başlangıç saati
@@ -92,6 +122,7 @@ const AppointmentScheduler = ({ staffId }) => {
   };
 
   const handleDateChange = (date, dateString) => {
+    filterData(waitingAndAcceptedAppointments, dateString);
     const data = filterData(waitingAndAcceptedAppointments, dateString);
     setFilteredData(data);
     console.log("FİLTERED: ", data);
@@ -101,6 +132,7 @@ const AppointmentScheduler = ({ staffId }) => {
     try {
       const response = await staffConfigService.getStaffConfigById(staffId);
       setStaffConfig(response.data);
+      console.log("STAFF CONFIG: ", response.data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -144,11 +176,55 @@ const AppointmentScheduler = ({ staffId }) => {
     }
   }, [loading, staffConfig]);
 
-  const appointments = generateAppointments();
+  let appointments = generateAppointments();
+  console.log("saatler:", appointments);
 
   const filterBookedHours = () => {
+    filteredData.forEach((appointment) => {
+      // Randevunun başlangıç saatini ve süresini alıyorum
+      let startHour = appointment.appointmentHour;
+      let duration = appointment.totalDuration;
+
+      // Başlangıç saatini ve süreyi dakika cinsinden sayısal değerlere dönüştürüyorum
+      let startMinutes =
+        parseInt(startHour.split(":")[0]) * 60 +
+        parseInt(startHour.split(":")[1]);
+      let durationMinutes = parseInt(duration);
+
+      // Randevunun bitiş saatini dakika cinsinden hesaplıyorum
+      let endMinutes = startMinutes + durationMinutes;
+
+      // Randevunun başlangıç ve bitiş saatlerini saat:dakika formatına dönüştürüyorum
+      let endHour =
+        Math.floor(endMinutes / 60) +
+        ":" +
+        (endMinutes % 60).toString().padStart(2, "0");
+      startHour =
+        Math.floor(startMinutes / 60) +
+        ":" +
+        (startMinutes % 60).toString().padStart(2, "0");
+
+      // Randevunun başlangıç ve bitiş saatlerini appointments dizisinde arıyorum
+      // Eğer bulursam, o saatleri diziden çıkarıyorum
+      appointments = appointments.filter((app) => {
+        // appointments dizisindeki her bir saat için saat kısmını alıyorum
+        app = app.toString();
+        let appHour = app.split(" ")[4];
+        // Saat kısmını dakika cinsinden sayısal değere dönüştürüyorum
+        let appMinutes =
+          parseInt(appHour.split(":")[0]) * 60 +
+          parseInt(appHour.split(":")[1]);
+        // Eğer randevunun başlangıç ve bitiş saatleri arasında ise, false döndürüyorum
+        // Böylece o saat filtrelenmiş oluyor
+        return appMinutes < startMinutes || appMinutes >= endMinutes;
+      });
+    });
+
+    console.log("SON METOD: ", appointments);
+  };
+
+  const deprecatedFilterBookedHours = () => {
     filteredData.forEach(function (appointment) {
-      console.log("TOTAL DURATION: ", appointment.totalDuration);
       var index = appointments.findIndex(function (time) {
         return (
           time.getHours() ===
@@ -163,8 +239,6 @@ const AppointmentScheduler = ({ staffId }) => {
         var oldHour = new Date(appointments[index]);
         var newHour = new Date(appointments[index]);
         newHour.setMinutes(newHour.getMinutes() + appointment.totalDuration);
-        console.log("YENİ SAAT: ", newHour);
-        console.log("ESKİ SAAT: ", oldHour);
 
         const hoursToDelete = [];
         // oldHour'un değerini değiştirmemek için kopyasını al
@@ -176,7 +250,6 @@ const AppointmentScheduler = ({ staffId }) => {
           // currentHour'u değiştirmemek için kopyasını al
           hoursToDelete.push(new Date(currentHour));
           currentHour.setMinutes(currentHour.getMinutes() + slotSpacing);
-          console.log("CURRENT HOUR: ", currentHour);
         }
 
         // hoursToDelete içindeki saatleri appointments dizisinden sil
@@ -202,8 +275,8 @@ const AppointmentScheduler = ({ staffId }) => {
     console.log("Hadi aslanım benim!: ", appointments);
   };
 
+  //filterBookedHours();
   filterBookedHours();
-
   return (
     <div>
       {!loading && staffConfig && appointments.length > 0 ? (
@@ -239,8 +312,16 @@ const AppointmentScheduler = ({ staffId }) => {
           </div>
           <p>Seçilen Randevu Saati: {selectedAppointment}</p>
 
-          <TextArea onChange={handleNotesChange} rows={4} placeholder="Notlarınızı ekleyin" maxLength={6} style={{maxWidth: "500px"}}/>
-          <br/><br/>{notes}
+          <TextArea
+            onChange={handleNotesChange}
+            rows={4}
+            placeholder="Notlarınızı ekleyin"
+            maxLength={6}
+            style={{ maxWidth: "500px" }}
+          />
+          <br />
+          <br />
+          {notes}
           <Button>Randevu Oluştur</Button>
         </>
       ) : (
