@@ -2,10 +2,12 @@ import { Button, DatePicker, Radio } from "antd";
 import React, { useEffect, useState } from "react";
 import StaffConfigService from "../api/StaffConfigService.ts";
 import AppointmentService from "../api/AppointmentService.ts";
+import PermissionService from "../api/PermissionService.ts";
 import TextArea from "antd/es/input/TextArea";
 
 const appointmentService = new AppointmentService();
 const staffConfigService = new StaffConfigService();
+const permissionService = new PermissionService();
 
 const AppointmentScheduler = ({ staffId }) => {
   const [staffConfig, setStaffConfig] = useState(null);
@@ -16,7 +18,6 @@ const AppointmentScheduler = ({ staffId }) => {
     waitingAndAcceptedAppointments
   );
   const [notes, setNotes] = useState("");
-
   const [startShiftHour, setStartShiftHour] = useState(null);
   const [endShiftHour, setEndShiftHour] = useState(null);
   const [slotSpacing, setSlotSpacing] = useState(30);
@@ -24,40 +25,6 @@ const AppointmentScheduler = ({ staffId }) => {
   const [breakTime, setBreakTime] = useState(null);
 
   const [selectedAppointment, setSelectedAppointment] = useState("");
-
-  //   const startHour = new Date(null, null, null, 9, 30);
-  //   const endHour = new Date(null, null, null, 20, 30);
-  //   const slotInterval = 30;
-  //   const testbreakHour = new Date(null, null, null, 13, 0);
-
-  const deprecatedFilterData = (data, dateString) => {
-    console.log(
-      "WAİTİNG ACCEPTED APPOINTMENTS: ",
-      waitingAndAcceptedAppointments
-    );
-    console.log("DATE STRİNG", dateString);
-    const result = data.filter((item) => {
-      const date = item.appointmentDate;
-      const jsDate = new Date(
-        date[0],
-        date[1] - 1,
-        date[2] - 6,
-        date[3],
-        date[4],
-        date[5],
-        date[6]
-      );
-      // Saat, dakika, saniye ve milisaniyeyi sıfırla
-      jsDate.setHours(0, 0, 0, 0);
-      // Karşılaştırılacak tarih nesnesini de sıfırla
-      const compareDate = new Date(dateString);
-      compareDate.setHours(0, 0, 0, 0);
-      // Zaman damgalarını karşılaştır
-      return jsDate.getTime() === compareDate.getTime();
-    });
-
-    return result;
-  };
 
   const filterData = (data, dateString) => {
     // Veriyi filter metodu ile filtreleyelim
@@ -177,7 +144,6 @@ const AppointmentScheduler = ({ staffId }) => {
   }, [loading, staffConfig]);
 
   let appointments = generateAppointments();
-  console.log("saatler:", appointments);
 
   const filterBookedHours = () => {
     filteredData.forEach((appointment) => {
@@ -222,6 +188,10 @@ const AppointmentScheduler = ({ staffId }) => {
 
     console.log("SON METOD: ", appointments);
   };
+
+  const filterPermissionHours = () => {
+
+  }
 
   const deprecatedFilterBookedHours = () => {
     filteredData.forEach(function (appointment) {
