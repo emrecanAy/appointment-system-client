@@ -27,6 +27,7 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
   const [breakHour, setBreakHour] = useState(null);
   const [breakTime, setBreakTime] = useState(null);
   const [selectedAppointment, setSelectedAppointment] = useState("");
+  const [isDateSelected, setIsDateSelected] = useState(false);
 
   /* REQUESTS */
   const getAllAcceptedPermissionsByStaff = async (staffId) => {
@@ -316,8 +317,8 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
     // Geçmiyorsa da randevu alınabilsin.
     filteredPermissionsData.forEach((data) => {
       var permissionStartHour = new Date();
-      const startHour =  data.permissionStartHour[0];
-      const startMinute =  data.permissionStartHour[1];
+      const startHour = data.permissionStartHour[0];
+      const startMinute = data.permissionStartHour[1];
       permissionStartHour.setHours(parseInt(startHour));
       permissionStartHour.setMinutes(parseInt(startMinute));
       permissionStartHour.setSeconds(0);
@@ -420,6 +421,9 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
   };
 
   const handleDateChange = (date, dateString) => {
+    if (date) {
+      setIsDateSelected(true);
+    }
     const data = filterData(waitingAndAcceptedAppointments, dateString);
     const permissionsData = filterPermissionsData(
       acceptedPermissions,
@@ -473,47 +477,59 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
       {!loading && staffConfig && appointments.length > 0 ? (
         <>
           <div>
-            <div style={{ marginTop: "35px" }}>
-              <h2>Tarih Seç</h2>
-              <DatePicker
-                onChange={handleDateChange}
-                style={{ marginBottom: "20px" }}
-              />
-            </div>
+            {selectedServices.length > 0 ? (
+              <div style={{ marginTop: "35px" }}>
+                <h2>Tarih Seç</h2>
+                <DatePicker
+                  onChange={handleDateChange}
+                  style={{ marginBottom: "20px" }}
+                />
+              </div>
+            ) : (
+              <></>
+            )}
 
-            <h2>Uygun Randevu Saatleri</h2>
-
-            <Radio.Group buttonStyle="solid" style={{ marginBottom: "20px" }}>
-              {appointments.map((appointment) => (
-                <Radio.Button
-                  key={appointment.getTime()}
-                  value={appointment.toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                  onChange={handleRadioChange}
+            {isDateSelected ? (
+              <>
+                <h2>Uygun Randevu Saatleri</h2>
+                <Radio.Group
+                  buttonStyle="solid"
+                  style={{ marginBottom: "20px" }}
                 >
-                  {appointment.toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </Radio.Button>
-              ))}
-            </Radio.Group>
-          </div>
-          <p>Seçilen Randevu Saati: {selectedAppointment}</p>
+                  {appointments.map((appointment) => (
+                    <Radio.Button
+                      key={appointment.getTime()}
+                      value={appointment.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                      onChange={handleRadioChange}
+                    >
+                      {appointment.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </Radio.Button>
+                  ))}
+                </Radio.Group>
+                <p>Seçilen Randevu Saati: {selectedAppointment}</p>
 
-          <TextArea
-            onChange={handleNotesChange}
-            rows={4}
-            placeholder="Notlarınızı ekleyin"
-            maxLength={6}
-            style={{ maxWidth: "500px" }}
-          />
-          <br />
-          <br />
-          {notes}
-          <Button>Randevu Oluştur</Button>
+                <TextArea
+                  onChange={handleNotesChange}
+                  rows={4}
+                  placeholder="Notlarınızı ekleyin"
+                  maxLength={6}
+                  style={{ maxWidth: "500px" }}
+                />
+                <br />
+                <br />
+                {notes}
+                <Button>Randevu Oluştur</Button>
+              </>
+            ) : (
+              <></>
+            )}
+          </div>
         </>
       ) : (
         <div></div>

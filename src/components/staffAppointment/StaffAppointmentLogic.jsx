@@ -24,19 +24,21 @@ function StaffAppointmentLogic({ staff }) {
     getAllServicesByStaff(staff.staffId);
   }, [staff.staffId]);
 
-  const handleCheckboxChange = (record, checked) => {
+  const handleCheckboxChange = (e, record) => {
+    const checked = e.target.checked;
+
     if (checked) {
-      setSelectedServices(prevSelected => [...prevSelected, record]);
+      setSelectedServices((prevSelectedRows) => [...prevSelectedRows, record]);
     } else {
-      setSelectedServices(prevSelected => prevSelected.filter(service => service.key !== record.key));
+      setSelectedServices((prevSelectedRows) =>
+        prevSelectedRows.filter((row) => row !== record)
+      );
     }
   };
 
   useEffect(() => {
     console.log(selectedServices);
   }, [selectedServices]);
-
-
 
   const columns = [
     {
@@ -63,7 +65,10 @@ function StaffAppointmentLogic({ staff }) {
       title: "Seç",
       dataIndex: "select",
       key: "select",
-      render: (_, record) => <Checkbox onChange = {(e) => handleCheckboxChange(record, e.target.checked)}/>,
+      render: (_, record) => <Checkbox
+      onChange={(e) => handleCheckboxChange(e, record)}
+      checked={selectedServices.includes(record)}
+    />,
     },
   ];
 
