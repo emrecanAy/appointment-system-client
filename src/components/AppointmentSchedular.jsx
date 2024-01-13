@@ -68,6 +68,47 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
   };
 
   /* FILTERS */
+  /* Tüm randevular içinden yalnızca seçilen gündekileri filtreliyor. */
+  const filterData = (data, dateString) => {
+    // Veriyi filter metodu ile filtreleyelim
+    var sonuc = data.filter(function (eleman) {
+      // Her bir elemanın appointmentDate özelliğinin ilk üç elemanını alalım
+      var yil = eleman.appointmentDate[0];
+      var ay = eleman.appointmentDate[1];
+      var gun = eleman.appointmentDate[2];
+      // Bu değerlerden yeni bir tarih nesnesi oluşturalım
+      var elemanTarihi = new Date(yil, ay - 1, gun + 1); // Ay değeri 0'dan başladığı için 1 çıkardık
+      // Elemanın tarihini istenen tarih ile karşılaştıralım
+      console.log("KONTROL TARİHİ: ", elemanTarihi.toISOString().slice(0, 10));
+      console.log("İSTENEN TARİH: ", dateString);
+      return elemanTarihi.toISOString().slice(0, 10) === dateString;
+    });
+
+    console.log("TEST FİLTER DATA: ", sonuc);
+    return sonuc;
+  }; 
+
+  /* Tüm izinler içinden yalnızca seçilen gündekileri filtreliyor. */
+  const filterPermissionsData = (data, dateString) => {
+    // Veriyi filter metodu ile filtreleyelim
+    var sonuc = data.filter(function (eleman) {
+      // Her bir elemanın appointmentDate özelliğinin ilk üç elemanını alalım
+      var yil = eleman.permissionDate[0];
+      var ay = eleman.permissionDate[1];
+      var gun = eleman.permissionDate[2];
+      // Bu değerlerden yeni bir tarih nesnesi oluşturalım
+      var elemanTarihi = new Date(yil, ay - 1, gun + 1); // Ay değeri 0'dan başladığı için 1 çıkardım
+      // Elemanın tarihini istenen tarih ile karşılaştıralım
+      console.log("KONTROL TARİHİ: ", elemanTarihi.toISOString().slice(0, 10));
+      console.log("İSTENEN TARİH: ", dateString);
+      return elemanTarihi.toISOString().slice(0, 10) === dateString;
+    });
+
+    console.log("TEST FİLTER PERMİSSİONS DATA: ", sonuc);
+    return sonuc;
+  }; 
+
+  /* Önceden alınmış randevu slotlarını filtreliyor. */
   const filterBookedHours = () => {
     filteredData.forEach((appointment) => {
       // Randevunun başlangıç saatini ve süresini alıyorum
@@ -110,6 +151,7 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
     });
   };
 
+  /* Önceden alınmış izin slotlarını filtreliyor. */
   const filterPermissionHours = () => {
     if (filteredPermissionsData) {
       filteredPermissionsData.forEach((permission) => {
@@ -146,44 +188,7 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
     }
   };
 
-  const filterData = (data, dateString) => {
-    // Veriyi filter metodu ile filtreleyelim
-    var sonuc = data.filter(function (eleman) {
-      // Her bir elemanın appointmentDate özelliğinin ilk üç elemanını alalım
-      var yil = eleman.appointmentDate[0];
-      var ay = eleman.appointmentDate[1];
-      var gun = eleman.appointmentDate[2];
-      // Bu değerlerden yeni bir tarih nesnesi oluşturalım
-      var elemanTarihi = new Date(yil, ay - 1, gun + 1); // Ay değeri 0'dan başladığı için 1 çıkardık
-      // Elemanın tarihini istenen tarih ile karşılaştıralım
-      console.log("KONTROL TARİHİ: ", elemanTarihi.toISOString().slice(0, 10));
-      console.log("İSTENEN TARİH: ", dateString);
-      return elemanTarihi.toISOString().slice(0, 10) === dateString;
-    });
-
-    console.log("TEST FİLTER DATA: ", sonuc);
-    return sonuc;
-  };
-
-  const filterPermissionsData = (data, dateString) => {
-    // Veriyi filter metodu ile filtreleyelim
-    var sonuc = data.filter(function (eleman) {
-      // Her bir elemanın appointmentDate özelliğinin ilk üç elemanını alalım
-      var yil = eleman.permissionDate[0];
-      var ay = eleman.permissionDate[1];
-      var gun = eleman.permissionDate[2];
-      // Bu değerlerden yeni bir tarih nesnesi oluşturalım
-      var elemanTarihi = new Date(yil, ay - 1, gun + 1); // Ay değeri 0'dan başladığı için 1 çıkardım
-      // Elemanın tarihini istenen tarih ile karşılaştıralım
-      console.log("KONTROL TARİHİ: ", elemanTarihi.toISOString().slice(0, 10));
-      console.log("İSTENEN TARİH: ", dateString);
-      return elemanTarihi.toISOString().slice(0, 10) === dateString;
-    });
-
-    console.log("TEST FİLTER PERMİSSİONS DATA: ", sonuc);
-    return sonuc;
-  };
-
+  /* Toplam işlem süresi sıradaki randevuyla çakışıyor mu? */
   const checkIfTotalDurationExceedsNextAppointment = (selectedAppointment) => {
     console.log(selectedAppointment);
     // Seçilen saati al.
@@ -197,64 +202,63 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
       const minute = data.appointmentHour.split(":")[1];
       appointmentHour.setHours(parseInt(hour));
       appointmentHour.setMinutes(parseInt(minute));
-      appointmentHour.setSeconds(0);
+      appointmentHour.setSeconds(0); //10:00
 
       var newHour = new Date();
       newHour.setHours(parseInt(selectedAppointment.split(":")[0]));
       newHour.setMinutes(parseInt(selectedAppointment.split(":")[1]));
       newHour.setSeconds(0);
-      console.log(newHour); //Sat Jan 13 2024 10:00:00 GMT+0300 (GMT+03:00)
+      console.log(newHour); //09:00 //En fazla 1 saatlik işlem alınabilir.
 
-      newHour.setMinutes(newHour.getMinutes() + slotSpacing);
+      for (let i = 0; i <= appointments.length; i++) {
+        newHour.setMinutes(newHour.getMinutes() + slotSpacing);
 
-      const stringAppointmentHour = `${appointmentHour.getHours()}:${appointmentHour.getMinutes()}`;
-      const stringNewHour = `${newHour.getHours()}:${newHour.getMinutes()}`;
-      console.log("String New: ", stringNewHour);
-      console.log("String App: ", stringAppointmentHour);
-      if (stringNewHour.trim() === stringAppointmentHour.trim()) {
-        console.log("EVET BULDUM: ", newHour);
-        //BURADA seçilmiş saatten sonraya alınmış olan ilk randevuyu buldum.
-        //Örnek: seçilmiş saat 09:00. 09:00'dan sonraya daha önceden başkası tarafından alınmış olan randevu saati ise 09:30
-        //Dolayısıyla 09:00'a alınacak olan randevunun toplam işlem saati en fazla 30 dakika sürebilir. Yani bir sonraki randevu saatine kadar sürebilir.
+        const stringAppointmentHour = `${appointmentHour.getHours()}:${appointmentHour.getMinutes()}`;
+        const stringNewHour = `${newHour.getHours()}:${newHour.getMinutes()}`;
+        if (stringNewHour.trim() === stringAppointmentHour.trim()) {
+          console.log("EVET BULDUM: ", newHour);
+          //BURADA seçilmiş saatten sonraya alınmış olan ilk randevuyu buldum.
+          //Örnek: seçilmiş saat 09:00. 09:00'dan sonraya daha önceden başkası tarafından alınmış olan randevu saati ise 09:30
+          //Dolayısıyla 09:00'a alınacak olan randevunun toplam işlem saati en fazla 30 dakika sürebilir. Yani bir sonraki randevu saatine kadar sürebilir.
 
-        let totalDuration = 0;
-        selectedServices.forEach((service) => {
-          totalDuration += service.careServiceDuration;
-        });
+          let totalDuration = 0;
+          selectedServices.forEach((service) => {
+            totalDuration += service.careServiceDuration;
+          });
 
-        //seçilen saati al.
-        var selectedHour = new Date();
-        selectedHour.setHours(parseInt(selectedAppointment.split(":")[0]));
-        selectedHour.setMinutes(parseInt(selectedAppointment.split(":")[1]));
-        selectedHour.setSeconds(0);
+          //seçilen saati al.
+          var selectedHour = new Date();
+          selectedHour.setHours(parseInt(selectedAppointment.split(":")[0]));
+          selectedHour.setMinutes(parseInt(selectedAppointment.split(":")[1]));
+          selectedHour.setSeconds(0);
 
-        console.log("Seçilen saat: ", selectedHour);
-        const newDurationHour = selectedHour.setMinutes(
-          //burada selectedHour değişmeyecek sandım. Ama setMinutes dediğim için direkt kendisi değişmiş;
-          newHour.getMinutes() + parseInt(totalDuration)
-        );
+          console.log("Seçilen saat: ", selectedHour);
+          const newDurationHour = selectedHour.setMinutes(
+            newHour.getMinutes() + parseInt(totalDuration)
+          ); //burada selectedHour değişmeyecek sandım. Ama setMinutes dediğim için direkt kendisi değişmiş;
 
-        selectedHour.setHours(parseInt(selectedAppointment.split(":")[0]));
-        selectedHour.setMinutes(parseInt(selectedAppointment.split(":")[1]));
-        selectedHour.setSeconds(0);
-        if (newDurationHour > appointmentHour) {
-          // Zaman dilimi farkını dikkate alarak iki tarih arasındaki farkı alalım ve dakika cinsine çevirelim
-          const differenceInMinutes = Math.round(
-            (appointmentHour - selectedHour) / (1000 * 60)
-          );
-          console.log(
-            `Seçtiğiniz işlemlerin toplam süresi sıradaki randevuyu aşmaktadır! Sıradaki randevu saati: ${stringAppointmentHour}. Alabileceğiniz maksimum işlem süresi: ${differenceInMinutes}`
-          );
-          message.warning(
-            `Seçtiğiniz işlemlerin toplam süresi sıradaki randevuyu aşmaktadır! Sıradaki randevu saati: ${stringAppointmentHour}. Alabileceğiniz maksimum işlem süresi: ${differenceInMinutes} dakika.`
-          );
+          selectedHour.setHours(parseInt(selectedAppointment.split(":")[0]));
+          selectedHour.setMinutes(parseInt(selectedAppointment.split(":")[1]));
+          selectedHour.setSeconds(0);
+          if (newDurationHour > appointmentHour) {
+            // Zaman dilimi farkını dikkate alarak iki tarih arasındaki farkı alalım ve dakika cinsine çevirelim
+            const differenceInMinutes = Math.round(
+              (appointmentHour - selectedHour) / (1000 * 60)
+            );
+            console.log(
+              `Seçtiğiniz işlemlerin toplam süresi sıradaki randevuyu aşmaktadır! Sıradaki randevu saati: ${stringAppointmentHour}. Alabileceğiniz maksimum işlem süresi: ${differenceInMinutes}`
+            );
+            message.warning(
+              `Seçtiğiniz işlemlerin toplam süresi sıradaki randevuyu aşmaktadır! Sıradaki randevu saati: ${stringAppointmentHour}. Alabileceğiniz maksimum işlem süresi: ${differenceInMinutes} dakika.`
+            );
+          }
         }
       }
     });
   };
 
+  /* Toplam işlem süresi mola saatiyle çakışıyor mu? */
   const checkIfTotalDurationExceedsBreak = (selectedAppointment) => {
-    //Aynı işlem izin saatine de gerekebilir.
     // Seçilen saati al.
     // Break'e bak.
     // Bu seçilen saattaki işlemlerin süre toplamı mola saatini geçiyorsa "alamazsınız" uyarı çıkar.
@@ -309,6 +313,7 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
     }
   };
 
+  /* Toplam işlem süresi izin saatiyle çakışıyor mu? */
   const checkIfTotalDurationExceedsPermission = (selectedAppointment) => {
     //Aynı işlem izin saatine de gerekebilir.
     // Seçilen saati al.
@@ -374,6 +379,57 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
     });
   };
 
+  /* Bitiş saati için de bitiş saatini aşmayacak kadar diye bir kısıt eklesem mi? ekleyebilirim, eklemeli miyim? İPTAL edilebilir! */
+  const checkIfTotalDurationExceedsEndShiftHour = (selectedAppointment) => {
+    var newHour = new Date();
+    newHour.setHours(parseInt(selectedAppointment.split(":")[0]));
+    newHour.setMinutes(parseInt(selectedAppointment.split(":")[1]));
+    newHour.setSeconds(0);
+    console.log("NEW HOUR: ", newHour);
+
+    var endShiftHour = new Date();
+    endShiftHour.setHours(staffConfig.endShiftHour[0]);
+    endShiftHour.setMinutes(staffConfig.endShiftHour[1]);
+    endShiftHour.setSeconds(0);
+
+    if (newHour < endShiftHour) {
+      let totalDuration = 0;
+      selectedServices.forEach((service) => {
+        totalDuration += service.careServiceDuration;
+      });
+
+      const stringEndShiftHour = `${endShiftHour.getHours()}:${endShiftHour.getMinutes()}`;
+
+      //seçilen saati al.
+      var selectedHour = new Date();
+      selectedHour.setHours(parseInt(selectedAppointment.split(":")[0]));
+      selectedHour.setMinutes(parseInt(selectedAppointment.split(":")[1]));
+      selectedHour.setSeconds(0);
+
+      console.log("Seçilen saat: ", selectedHour);
+      const newDurationHour = selectedHour.setMinutes(
+        //burada selectedHour değişmeyecek sandım. Ama setMinutes dediğim için direkt kendisi değişmiş;
+        newHour.getMinutes() + parseInt(totalDuration)
+      );
+
+      selectedHour.setHours(parseInt(selectedAppointment.split(":")[0]));
+      selectedHour.setMinutes(parseInt(selectedAppointment.split(":")[1]));
+      selectedHour.setSeconds(0);
+      if (newDurationHour > endShiftHour) {
+        // Zaman dilimi farkını dikkate alarak iki tarih arasındaki farkı alalım ve dakika cinsine çevirelim
+        const differenceInMinutes = Math.round(
+          (endShiftHour - selectedHour) / (1000 * 60)
+        );
+        console.log(
+          `Seçtiğiniz işlemlerin toplam süresi kuaförünüzün mesai bitiş saatini aşmaktadır! Mesai Bitiş Saati: ${stringEndShiftHour}. Alabileceğiniz maksimum işlem süresi: ${differenceInMinutes}`
+        );
+        message.warning(
+          `Seçtiğiniz işlemlerin toplam süresi kuaförünüzün mesai bitiş saatini aşmaktadır! Mesai Bitiş Saati: ${stringEndShiftHour}. Alabileceğiniz maksimum işlem süresi: ${differenceInMinutes} dakika.`
+        );
+      }
+    }
+  }
+
   /* GENERATIONS */
   const generateAppointments = () => {
     const appointments = [];
@@ -388,7 +444,7 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
     }
 
     var currentHour = new Date(startShiftHour); // Mevcut saati tutan değişken
-    while (currentHour <= endShiftHour) {
+    while (currentHour < endShiftHour) {
       // Mevcut saatin mola saatleri arasında olup olmadığını kontrol et
       var isBreakTime = false; // Mola zamanı olup olmadığını tutan değişken
       var breakStart = new Date(breakHour); // Mola başlangıç saati
@@ -420,9 +476,12 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
     setSelectedAppointment(event.target.value);
   };
 
+
   const handleDateChange = (date, dateString) => {
-    if (date) {
+    if (dateString.length > 0) {
       setIsDateSelected(true);
+    } else {
+      setIsDateSelected(false);
     }
     const data = filterData(waitingAndAcceptedAppointments, dateString);
     const permissionsData = filterPermissionsData(
@@ -444,6 +503,7 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
       checkIfTotalDurationExceedsNextAppointment(selectedAppointment);
       checkIfTotalDurationExceedsBreak(selectedAppointment);
       checkIfTotalDurationExceedsPermission(selectedAppointment);
+      checkIfTotalDurationExceedsEndShiftHour(selectedAppointment); //üzerinde düşünülmeli!
     }
   }, [selectedAppointment]);
 
@@ -472,6 +532,7 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
 
   filterBookedHours();
   filterPermissionHours();
+
   return (
     <div>
       {!loading && staffConfig && appointments.length > 0 ? (
@@ -512,8 +573,13 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
                     </Radio.Button>
                   ))}
                 </Radio.Group>
-                <p>Seçilen Randevu Saati: {selectedAppointment}</p>
+                {selectedAppointment ? (
+                  <p>Seçilen Randevu Saati: {selectedAppointment}</p>
+                ) : (
+                  <></>
+                )}
 
+                <p></p>
                 <TextArea
                   onChange={handleNotesChange}
                   rows={4}
