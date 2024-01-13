@@ -263,7 +263,7 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
     newHour.setHours(parseInt(selectedAppointment.split(":")[0]));
     newHour.setMinutes(parseInt(selectedAppointment.split(":")[1]));
     newHour.setSeconds(0);
-    console.log(newHour);
+    console.log("NEW HOUR: ", newHour);
 
     var breakHour = new Date();
     breakHour.setHours(staffConfig.breakHour[0]);
@@ -306,6 +306,71 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
         );
       }
     }
+  };
+
+  const checkIfTotalDurationExceedsPermission = (selectedAppointment) => {
+    //Aynı işlem izin saatine de gerekebilir.
+    // Seçilen saati al.
+    // filteredPermissionsData içerisindeki seçilen saatten sonraki ilk izin saatine bak.
+    // Bu seçilen saattaki işlemlerin süre toplamı izin saatini geçiyorsa "alamazsınız" uyarı çıkar.
+    // Geçmiyorsa da randevu alınabilsin.
+    filteredPermissionsData.forEach((data) => {
+      var permissionStartHour = new Date();
+      const startHour =  data.permissionStartHour[0];
+      const startMinute =  data.permissionStartHour[1];
+      permissionStartHour.setHours(parseInt(startHour));
+      permissionStartHour.setMinutes(parseInt(startMinute));
+      permissionStartHour.setSeconds(0);
+
+      var permissionEndHour = new Date();
+      const endHour = data.permissionEndHour[0];
+      const endMinute = data.permissionEndHour[1];
+      permissionEndHour.setHours(parseInt(endHour));
+      permissionEndHour.setMinutes(parseInt(endMinute));
+      permissionEndHour.setSeconds(0);
+
+      var newHour = new Date();
+      newHour.setHours(parseInt(selectedAppointment.split(":")[0]));
+      newHour.setMinutes(parseInt(selectedAppointment.split(":")[1]));
+      newHour.setSeconds(0);
+      console.log(newHour);
+
+      newHour.setMinutes(newHour.getMinutes() + slotSpacing);
+
+      const stringPermissionStartHour = `${permissionStartHour.getHours()}:${permissionStartHour.getMinutes()}`;
+      const stringPermissionEndHour = `${permissionEndHour.getHours()}:${permissionEndHour.getMinutes()}`;
+      const stringNewHour = `${newHour.getHours()}:${newHour.getMinutes()}`;
+      if (stringNewHour.trim() === stringPermissionStartHour.trim()) {
+        let totalDuration = 0;
+        selectedServices.forEach((service) => {
+          totalDuration += service.careServiceDuration;
+        });
+
+        var selectedHour = new Date();
+        selectedHour.setHours(parseInt(selectedAppointment.split(":")[0]));
+        selectedHour.setMinutes(parseInt(selectedAppointment.split(":")[1]));
+        selectedHour.setSeconds(0);
+
+        const newDurationHour = selectedHour.setMinutes(
+          newHour.getMinutes() + parseInt(totalDuration)
+        );
+
+        selectedHour.setHours(parseInt(selectedAppointment.split(":")[0]));
+        selectedHour.setMinutes(parseInt(selectedAppointment.split(":")[1]));
+        selectedHour.setSeconds(0);
+        if (newDurationHour > permissionStartHour) {
+          const differenceInMinutes = Math.round(
+            (permissionStartHour - selectedHour) / (1000 * 60)
+          );
+          console.log(
+            `Seçtiğiniz işlemlerin toplam süresi kuaförün izin saatini aşmaktadır! İzin saati: ${stringPermissionStartHour}. Alabileceğiniz maksimum işlem süresi: ${differenceInMinutes}`
+          );
+          message.warning(
+            `Seçtiğiniz işlemlerin toplam süresi kuaförün izin saatini aşmaktadır! İzin Başlangıç Saati: ${stringPermissionStartHour} | İzin Bitiş Saati: ${stringPermissionEndHour}. Alabileceğiniz maksimum işlem süresi: ${differenceInMinutes} dakika.`
+          );
+        }
+      }
+    });
   };
 
   /* GENERATIONS */
@@ -371,8 +436,11 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
 
   /* USE EFFECTS */
   useEffect(() => {
-    checkIfTotalDurationExceedsNextAppointment(selectedAppointment);
-    checkIfTotalDurationExceedsBreak(selectedAppointment);
+    if (selectedAppointment) {
+      checkIfTotalDurationExceedsNextAppointment(selectedAppointment);
+      checkIfTotalDurationExceedsBreak(selectedAppointment);
+      checkIfTotalDurationExceedsPermission(selectedAppointment);
+    }
   }, [selectedAppointment]);
 
   useEffect(() => {
