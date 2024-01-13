@@ -31,6 +31,16 @@ export class PermissionService{
         }
     };
 
+    async getAllAcceptedPermissionsByStaff(staffId: string){
+        try {
+            const response = await this.api.get(`/getallaccepted/staff/${staffId}`);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    };
+
     async deletePermission(permission){
         try {
             const response = await this.api.put(`/delete`, permission);

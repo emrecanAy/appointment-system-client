@@ -17,6 +17,9 @@ const AppointmentScheduler = ({ staffId }) => {
   const [filteredData, setFilteredData] = useState(
     waitingAndAcceptedAppointments
   );
+  const [acceptedPermissions, setAcceptedPermissions] = useState(null);
+  const [filteredPermissionsData, setFilteredPermissionsData] =
+    useState(acceptedPermissions);
   const [notes, setNotes] = useState("");
   const [startShiftHour, setStartShiftHour] = useState(null);
   const [endShiftHour, setEndShiftHour] = useState(null);
@@ -42,6 +45,25 @@ const AppointmentScheduler = ({ staffId }) => {
     });
 
     console.log("TEST FİLTER DATA: ", sonuc);
+    return sonuc;
+  };
+
+  const filterPermissionsData = (data, dateString) => {
+    // Veriyi filter metodu ile filtreleyelim
+    var sonuc = data.filter(function (eleman) {
+      // Her bir elemanın appointmentDate özelliğinin ilk üç elemanını alalım
+      var yil = eleman.permissionDate[0];
+      var ay = eleman.permissionDate[1];
+      var gun = eleman.permissionDate[2];
+      // Bu değerlerden yeni bir tarih nesnesi oluşturalım
+      var elemanTarihi = new Date(yil, ay - 1, gun + 1); // Ay değeri 0'dan başladığı için 1 çıkardım
+      // Elemanın tarihini istenen tarih ile karşılaştıralım
+      console.log("KONTROL TARİHİ: ", elemanTarihi.toISOString().slice(0, 10));
+      console.log("İSTENEN TARİH: ", dateString);
+      return elemanTarihi.toISOString().slice(0, 10) === dateString;
+    });
+
+    console.log("TEST FİLTER PERMİSSİONS DATA: ", sonuc);
     return sonuc;
   };
 
@@ -89,10 +111,27 @@ const AppointmentScheduler = ({ staffId }) => {
   };
 
   const handleDateChange = (date, dateString) => {
-    filterData(waitingAndAcceptedAppointments, dateString);
     const data = filterData(waitingAndAcceptedAppointments, dateString);
+    const permissionsData = filterPermissionsData(
+      acceptedPermissions,
+      dateString
+    );
     setFilteredData(data);
-    console.log("FİLTERED: ", data);
+    setFilteredPermissionsData(permissionsData);
+    filterPermissionHours();
+  };
+
+  const getAllAcceptedPermissionsByStaff = async (staffId) => {
+    try {
+      console.log(staffId);
+      const response = await permissionService.getAllAcceptedPermissionsByStaff(
+        staffId
+      );
+      setAcceptedPermissions(response.data);
+      console.log("PERMISSIONS: ", response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getStaffConfigByStaff = async (staffId) => {
@@ -126,6 +165,7 @@ const AppointmentScheduler = ({ staffId }) => {
   useEffect(() => {
     getStaffConfigByStaff(staffId);
     getAllAppointmentsByStaff(staffId);
+    getAllAcceptedPermissionsByStaff(staffId);
   }, [staffId]);
 
   useEffect(() => {
@@ -185,68 +225,46 @@ const AppointmentScheduler = ({ staffId }) => {
         return appMinutes < startMinutes || appMinutes >= endMinutes;
       });
     });
-
-    console.log("SON METOD: ", appointments);
   };
 
   const filterPermissionHours = () => {
+    if (filteredPermissionsData) {
+      filteredPermissionsData.forEach((permission) => {
+        // Randevunun başlangıç saatini ve süresini alıyorum
+        let startHour = permission.permissionStartHour;
+        let endHour = permission.permissionEndHour;
 
-  }
+        // Başlangıç saatini ve süreyi dakika cinsinden sayısal değerlere dönüştürüyorum
+        let startMinutes = parseInt(startHour[0]) * 60 + parseInt(startHour[1]);
 
-  const deprecatedFilterBookedHours = () => {
-    filteredData.forEach(function (appointment) {
-      var index = appointments.findIndex(function (time) {
-        return (
-          time.getHours() ===
-            parseInt(appointment.appointmentHour.split(":")[0]) &&
-          time.getMinutes() ===
-            parseInt(appointment.appointmentHour.split(":")[1])
-        );
+        // Randevunun bitiş saatini dakika cinsinden hesaplıyorum
+        let endMinutes = parseInt(endHour[0]) * 60 + parseInt(endHour[1]);
+
+        // Randevunun başlangıç ve bitiş saatlerini appointments dizisinde arıyorum
+        // Eğer bulursam, o saatleri diziden çıkarıyorum
+        appointments = appointments.filter((apppointment) => {
+          // appointments dizisindeki her bir saat için saat kısmını alıyorum
+          apppointment = apppointment.toString();
+          let appointmentHour = apppointment.split(" ")[4];
+          // Saat kısmını dakika cinsinden sayısal değere dönüştürüyorum
+          let appointmentsMinutes =
+            parseInt(appointmentHour.split(":")[0]) * 60 +
+            parseInt(appointmentHour.split(":")[1]);
+          // Eğer randevunun başlangıç ve bitiş saatleri arasında ise, false döndürüyorum
+          // Böylece o saat filtrelenmiş oluyor
+          return (
+            appointmentsMinutes < startMinutes ||
+            appointmentsMinutes >= endMinutes
+          );
+        });
       });
 
-      if (index !== -1) {
-        // appointmentHour üzerine totalDuration ekleyerek yeni bir saat oluştur
-        var oldHour = new Date(appointments[index]);
-        var newHour = new Date(appointments[index]);
-        newHour.setMinutes(newHour.getMinutes() + appointment.totalDuration);
-
-        const hoursToDelete = [];
-        // oldHour'un değerini değiştirmemek için kopyasını al
-        var currentHour = new Date(oldHour);
-        while (
-          currentHour <=
-          newHour.setMinutes(newHour.getMinutes() - slotSpacing / 2)
-        ) {
-          // currentHour'u değiştirmemek için kopyasını al
-          hoursToDelete.push(new Date(currentHour));
-          currentHour.setMinutes(currentHour.getMinutes() + slotSpacing);
-        }
-
-        // hoursToDelete içindeki saatleri appointments dizisinden sil
-        hoursToDelete.forEach(function (deleteHour) {
-          var deleteIndex = appointments.findIndex(function (time) {
-            return (
-              time.getHours() === deleteHour.getHours() &&
-              time.getMinutes() === deleteHour.getMinutes()
-            );
-          });
-
-          if (deleteIndex !== -1) {
-            appointments.splice(deleteIndex, 1);
-          }
-        });
-      }
-
-      if (index !== -1) {
-        appointments.splice(index, 1);
-      }
-    });
-
-    console.log("Hadi aslanım benim!: ", appointments);
+      console.log("NEW: ", appointments);
+    }
   };
 
-  //filterBookedHours();
   filterBookedHours();
+  filterPermissionHours();
   return (
     <div>
       {!loading && staffConfig && appointments.length > 0 ? (
