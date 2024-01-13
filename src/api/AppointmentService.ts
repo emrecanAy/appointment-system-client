@@ -91,6 +91,16 @@ export class AppointmentService{
         }
     }
 
+    async createAppointment(appointment){
+        try {
+            const response = await this.api.post("/add", appointment);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    }
+
 }
 
 export default AppointmentService;

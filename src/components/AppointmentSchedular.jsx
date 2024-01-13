@@ -1,4 +1,4 @@
-import { Button, DatePicker, Radio, message } from "antd";
+import { Button, DatePicker, Popconfirm, Radio, message } from "antd";
 import React, { useEffect, useState } from "react";
 import StaffConfigService from "../api/StaffConfigService.ts";
 import AppointmentService from "../api/AppointmentService.ts";
@@ -27,6 +27,7 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
   const [breakHour, setBreakHour] = useState(null);
   const [breakTime, setBreakTime] = useState(null);
   const [selectedAppointment, setSelectedAppointment] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
   const [isDateSelected, setIsDateSelected] = useState(false);
 
   /* REQUESTS */
@@ -67,6 +68,26 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
     }
   };
 
+  const createAppointment = async () => {
+    const appointmentToAdd = {
+      staffId: staffId,
+      customerId: "b2961bbe-260f-4693-bd1a-8fcd63388c91", //giriş yapmış customer'ın id'si gelecek. Test için statik gireceğim.
+      appointmentDate: selectedDate,
+      appointmentHour: selectedAppointment,
+      note: notes,
+      staffCareServices: selectedServices,
+    };
+
+    try {
+      const response = await appointmentService.createAppointment(
+        appointmentToAdd
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   /* FILTERS */
   /* Tüm randevular içinden yalnızca seçilen gündekileri filtreliyor. */
   const filterData = (data, dateString) => {
@@ -86,7 +107,7 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
 
     console.log("TEST FİLTER DATA: ", sonuc);
     return sonuc;
-  }; 
+  };
 
   /* Tüm izinler içinden yalnızca seçilen gündekileri filtreliyor. */
   const filterPermissionsData = (data, dateString) => {
@@ -106,7 +127,7 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
 
     console.log("TEST FİLTER PERMİSSİONS DATA: ", sonuc);
     return sonuc;
-  }; 
+  };
 
   /* Önceden alınmış randevu slotlarını filtreliyor. */
   const filterBookedHours = () => {
@@ -379,7 +400,7 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
     });
   };
 
-  /* Bitiş saati için de bitiş saatini aşmayacak kadar diye bir kısıt eklesem mi? ekleyebilirim, eklemeli miyim? İPTAL edilebilir! */
+  /* Toplam işlem süresi mesai bitiş saatiyle çakışıyor mu? */
   const checkIfTotalDurationExceedsEndShiftHour = (selectedAppointment) => {
     var newHour = new Date();
     newHour.setHours(parseInt(selectedAppointment.split(":")[0]));
@@ -428,7 +449,7 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
         );
       }
     }
-  }
+  };
 
   /* GENERATIONS */
   const generateAppointments = () => {
@@ -471,13 +492,45 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
     return date;
   }
 
+  function formatMinutes(minute) {
+    if (minute < 60) {
+      return minute + " dakika";
+    } else {
+      var hour = Math.floor(minute / 60);
+      var remainingMinutes = minute % 60;
+
+      if (remainingMinutes === 0) {
+        return hour + " saat";
+      } else {
+        return hour + " saat " + remainingMinutes + " dakika";
+      }
+    }
+  }
+
+  /* CALCULATINGS */
+  const getTotalServiceDuration = (selectedServices) => {
+    let totalDuration = 0;
+    selectedServices.forEach((service) => {
+      totalDuration += service.careServiceDuration;
+    });
+    return totalDuration;
+  };
+
+  const getTotalServicePrice = (selectedServices) => {
+    let totalPrice = 0;
+    selectedServices.forEach((service) => {
+      totalPrice += service.careServicePrice;
+    });
+    return totalPrice;
+  };
+
   /* HANDLING CHANGES */
   const handleRadioChange = (event) => {
     setSelectedAppointment(event.target.value);
   };
 
-
   const handleDateChange = (date, dateString) => {
+    setSelectedDate(date);
     if (dateString.length > 0) {
       setIsDateSelected(true);
     } else {
@@ -495,6 +548,14 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
 
   const handleNotesChange = (e) => {
     setNotes(e.target.value);
+  };
+
+  const handlePopconfirm = (e) => {
+    createAppointment();
+    message.success("Randevu başarılı bir şekilde alındı.");
+  };
+  const handlePopcancel = (e) => {
+    message.error("Randevu işlemi iptal edildi!");
   };
 
   /* USE EFFECTS */
@@ -532,16 +593,16 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
 
   filterBookedHours();
   filterPermissionHours();
-
   return (
     <div>
-      {!loading && staffConfig && appointments.length > 0 ? (
+      {!loading && staffConfig? (
         <>
           <div>
             {selectedServices.length > 0 ? (
               <div style={{ marginTop: "35px" }}>
-                <h2>Tarih Seç</h2>
+                <h2>Tarih</h2>
                 <DatePicker
+                  placeholder="Tarih seç"
                   onChange={handleDateChange}
                   style={{ marginBottom: "20px" }}
                 />
@@ -553,28 +614,43 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
             {isDateSelected ? (
               <>
                 <h2>Uygun Randevu Saatleri</h2>
-                <Radio.Group
-                  buttonStyle="solid"
-                  style={{ marginBottom: "20px" }}
-                >
-                  {appointments.map((appointment) => (
-                    <Radio.Button
-                      key={appointment.getTime()}
-                      value={appointment.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                      onChange={handleRadioChange}
-                    >
-                      {appointment.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </Radio.Button>
-                  ))}
-                </Radio.Group>
-                {selectedAppointment ? (
-                  <p>Seçilen Randevu Saati: {selectedAppointment}</p>
+                {appointments.length > 0 ? (
+                  <Radio.Group
+                    buttonStyle="solid"
+                    style={{ marginBottom: "20px" }}
+                  >
+                    {appointments.map((appointment) => (
+                      <Radio.Button
+                        key={appointment.getTime()}
+                        value={appointment.toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                        onChange={handleRadioChange}
+                      >
+                        {appointment.toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </Radio.Button>
+                    ))}
+                  </Radio.Group>
+                ) : (
+                  <h2>Bütün randevular dolu!</h2>
+                )}
+
+                {selectedAppointment && isDateSelected ? (
+                  <>
+                    <p>Seçilen Randevu Saati: {selectedAppointment}</p>
+                    <p>
+                      Toplam İşlem Süresi:{" "}
+                      {formatMinutes(getTotalServiceDuration(selectedServices))}
+                    </p>
+                    <p>
+                      Toplam İşlem Tutarı:{" "}
+                      {getTotalServicePrice(selectedServices)}₺
+                    </p>
+                  </>
                 ) : (
                   <></>
                 )}
@@ -584,13 +660,21 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
                   onChange={handleNotesChange}
                   rows={4}
                   placeholder="Notlarınızı ekleyin"
-                  maxLength={6}
+                  maxLength={250}
                   style={{ maxWidth: "500px" }}
                 />
                 <br />
                 <br />
-                {notes}
-                <Button>Randevu Oluştur</Button>
+                <Popconfirm
+                  title="Randevu"
+                  description="Belirtilen tarih ve saatte randevu almak istediğinize emin misiniz?"
+                  onConfirm={handlePopconfirm}
+                  onCancel={handlePopcancel}
+                  okText="Evet"
+                  cancelText="Hayır"
+                >
+                  <Button>Randevu Oluştur</Button>
+                </Popconfirm>
               </>
             ) : (
               <></>
