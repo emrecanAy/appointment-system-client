@@ -14,6 +14,7 @@ import AppointmentsPage from "./pages/AppointmentsPage";
 import Permissions from "./pages/Permissions";
 import About from "./components/yoga/About";
 import StaffAppointmentPage from "./pages/StaffAppointmentPage";
+import StatisticsPage from "./components/StatisticsPage";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/test1" element={<About />} />
         <Route path="/test2" element={<StaffAppointmentPage />} />
         <Route path="/dashboard" element={<Dashboard />}>
+          <Route index element={<StatisticsPage/>} />
           <Route path="staff" element={<Staff />} />
           <Route path="staff/add" element={<UserForm />} />
           <Route path="staff/:staffId" element={<StaffDetail />} />
