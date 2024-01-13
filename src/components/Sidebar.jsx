@@ -64,7 +64,7 @@ function Sidebar({ currentUser }) {
       </div>
       <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
         <Menu.Item key="1" icon={<PieChartOutlined />}>
-          Ana Sayfa
+        <Link to={"/dashboard"}>Ana Sayfa</Link>
         </Menu.Item>
         <SubMenu key="sub3" icon={<UserOutlined />} title="Kuaför İşlemleri">
           <Menu.Item key="2">
