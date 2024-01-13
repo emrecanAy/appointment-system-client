@@ -8,6 +8,7 @@ const staffCareServiceService = new StaffCareServiceService();
 
 function StaffAppointmentLogic({ staff }) {
   const [staffCareServices, setStaffCareServices] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([]);
 
   const getAllServicesByStaff = async (staffId) => {
     try {
@@ -23,6 +24,17 @@ function StaffAppointmentLogic({ staff }) {
     getAllServicesByStaff(staff.staffId);
   }, [staff.staffId]);
 
+  const handleCheckboxChange = (record, checked) => {
+    if (checked) {
+      setSelectedServices(prevSelected => [...prevSelected, record]);
+    } else {
+      setSelectedServices(prevSelected => prevSelected.filter(service => service.key !== record.key));
+    }
+  };
+
+  useEffect(() => {
+    console.log(selectedServices);
+  }, [selectedServices]);
 
 
 
@@ -51,7 +63,7 @@ function StaffAppointmentLogic({ staff }) {
       title: "Seç",
       dataIndex: "select",
       key: "select",
-      render: (_, record) => <Checkbox />,
+      render: (_, record) => <Checkbox onChange = {(e) => handleCheckboxChange(record, e.target.checked)}/>,
     },
   ];
 
@@ -69,7 +81,7 @@ function StaffAppointmentLogic({ staff }) {
       
 
       <div>
-        <AppointmentScheduler staffId={staff.staffId}/>
+        <AppointmentScheduler staffId={staff.staffId} selectedServices={selectedServices}/>
       </div>
     </div>
   );
