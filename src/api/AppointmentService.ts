@@ -41,6 +41,26 @@ export class AppointmentService{
         }
     };
 
+    async getAllAcceptedAndWaitingAppointments(){
+        try {
+            const response = await this.api.get(`/getallwaitingandacceptedappointments`);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    };
+
+    async getAllCancelledAppointments(){
+        try {
+            const response = await this.api.get(`/getallcancelled`);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    };
+
     async getTotalEarningsByStaff(staffId: string){
         try {
             const response = await this.api.get(`/check-total-earning/${staffId}`);
