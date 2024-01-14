@@ -12,9 +12,10 @@ import CareService from "./pages/CareService";
 import StaffConfigs from "./pages/StaffConfigs";
 import AppointmentsPage from "./pages/AppointmentsPage";
 import Permissions from "./pages/Permissions";
-import About from "./components/yoga/About";
 import StaffAppointmentPage from "./pages/StaffAppointmentPage";
 import StatisticsPage from "./components/StatisticsPage";
+import Team from "./components/TestMainPage/Team";
+import ComingSoonPage from "./pages/coming-soon/ComingSoonPage";
 
 function App() {
   return (
@@ -23,8 +24,12 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/test1" element={<About />} />
-        <Route path="/test2" element={<StaffAppointmentPage />} />
+        <Route path="/test5" element={<ComingSoonPage />} />
+        <Route path="/our-team" element={<Team />} />
+        <Route path="/saloons" element={<ComingSoonPage />} />
+        <Route path="/blog" element={<ComingSoonPage />} />
+        <Route path="/contact" element={<ComingSoonPage />} />
+        <Route path="/staff-detail/:staffId" element={<StaffAppointmentPage />} />
         <Route path="/dashboard" element={<Dashboard />}>
           <Route index element={<StatisticsPage/>} />
           <Route path="staff" element={<Staff />} />

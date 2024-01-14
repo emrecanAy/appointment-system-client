@@ -29,7 +29,7 @@ function Header() {
                           <div><Link to={"/saloons"}>Salon Bul</Link></div>
                         </li>
                         <li>
-                          <div><Link to={"/team"}>Ekip</Link></div>
+                          <div><Link to={"/our-team"}>Ekip</Link></div>
                         </li>
                         <li>
                           <a href="portfolio.html">Hizmetler</a>

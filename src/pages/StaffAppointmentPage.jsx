@@ -1,35 +1,45 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
 import Footer from "../components/TestMainPage/Footer";
-import HeaderResponsiveTest from '../components/TestMainPage/HeaderResponsiveTest';
-import StaffAppointmentDetail from '../components/TestMainPage/StaffAppointmentDetail';
-import StaffAppointmentLogic from '../components/staffAppointment/StaffAppointmentLogic';
+import HeaderResponsiveTest from "../components/TestMainPage/HeaderResponsiveTest.jsx"
+import StaffAppointmentDetail from "../components/TestMainPage/StaffAppointmentDetail";
+import StaffAppointmentLogic from "../components/staffAppointment/StaffAppointmentLogic";
 import "./StaffAppointmentLogic.css";
+import { useParams } from "react-router-dom";
+import StaffService from "../api/StaffService.ts";
+
+const staffService = new StaffService();
 
 function StaffAppointmentPage() {
+  const [staff, setStaff] = useState(null);
+  const { staffId } = useParams();
 
-  const staff = {
-    "staffId": "d7e497d9-aa72-46ec-8753-ee08be984bc2",
-    "role": "ADMIN",
-    "firstName": "Domanic",
-    "lastName": "Campbell",
-    "email": "dominic-bro@gmail.com",
-    "phoneNumber": "+1 585695523654",
-    "userName": "dominic-campbell",
-    "password": "123",
-    "gender": "MALE",
-    "imagePath": "https://i.hizliresim.com/oudb8t3.JPG"
+  const getStaffById = async () => {
+    try {
+      const response = await staffService.getStaffById(staffId);
+      setStaff(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  useEffect(() => {
+    getStaffById(staffId);
+  }, []);
+
+  if(!staff){
+    return <></>
+  }
 
   return (
     <div>
-        <HeaderResponsiveTest/>
-        <main>
-            <StaffAppointmentDetail staff={staff}/>
-            <StaffAppointmentLogic staff={staff}/>
-        </main>
-        <Footer/>
+      <HeaderResponsiveTest/>
+      <main>
+        <StaffAppointmentDetail staff={staff} />
+        <StaffAppointmentLogic staff={staff} />
+      </main>
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default StaffAppointmentPage
+export default StaffAppointmentPage;

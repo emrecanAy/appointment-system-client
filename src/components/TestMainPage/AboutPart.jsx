@@ -28,7 +28,6 @@ function AboutPart() {
                 Brook presents your services with flexible, convefnient and ent
                 anipurpose layouts. You can select your favorite.
               </p>
-              <img src="img/gallery/signature.png" alt="" />
             </div>
           </div>
         </div>

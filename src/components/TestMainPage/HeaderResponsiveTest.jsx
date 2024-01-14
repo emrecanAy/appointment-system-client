@@ -12,9 +12,9 @@ function HeaderResponsiveTest() {
               {/* Logo */}
               <div className="col-xl-2 col-lg-2 col-md-1">
                 <div>
-                  <a href="index.html">
-                    <img src="img/logo/logo.png" alt="" />
-                  </a>
+                  <Link href={"/"}>
+                    <img src="img/logo/gc1.png" alt="" />
+                  </Link>
                 </div>
               </div>
               <div className="col-xl-10 col-lg-10 col-md-10">
@@ -34,7 +34,7 @@ function HeaderResponsiveTest() {
                           </Link>
                         </li>
                         <li>
-                          <Link to={"/team"}>
+                          <Link to={"/our-team"}>
                             <div>Ekip</div>
                           </Link>
                         </li>
