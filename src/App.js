@@ -15,8 +15,9 @@ import Permissions from "./pages/Permissions";
 import StatisticsPage from "./components/StatisticsPage";
 import Team from "./components/TestMainPage/Team";
 import ComingSoonPage from "./pages/coming-soon/ComingSoonPage";
-import StaffCareServicesPage from "./pages/staff/StaffConfigsPage";
+import StaffConfigsPage from "./pages/staff/StaffConfigsPage";
 import StaffAppointmentPage from "./pages/StaffAppointmentPage";
+import StaffCareServicesPage from "./pages/staff/StaffCareServicesPage";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="permissions" element={<Permissions />} />
           <Route path="staffconfigs" element={<StaffConfigs />} />
           <Route path="appointments" element={<AppointmentsPage />} />
+          <Route path="configs/:staffId" element={<StaffConfigsPage />} />
           <Route path="staff-careservices/:staffId" element={<StaffCareServicesPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />

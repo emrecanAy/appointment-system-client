@@ -14,15 +14,10 @@ const { Text } = Typography;
 
 function StaffSidebar({ currentUser }) {
   const [collapsed, setCollapsed] = useState(false);
-  const imageUrl = "https://static.toiimg.com/photo/msid-67586673/67586673.jpg";
 
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);
   };
-
-  useEffect(() => {
-    console.log("staff Sidebar çalıştı: " + currentUser.imageUrl);
-  }, []);
 
   return (
     <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
@@ -41,7 +36,7 @@ function StaffSidebar({ currentUser }) {
             {collapsed ? (
               <UserOutlined style={{ fontSize: "32px", color: "#fff" }} />
             ) : (
-              <Image src={imageUrl} size={64} />
+              <Image src={currentUser.imagePath} size={64} />
             )}
             {!collapsed && (
               <div style={{ textAlign: "center", marginTop: "8px" }}>
@@ -68,7 +63,7 @@ function StaffSidebar({ currentUser }) {
         </Menu.Item>
         <Menu.Item key="2" icon={<SnippetsOutlined />}>
           <Link>
-            Bakım Servislerim
+            <Link to={`staff-careservices/${currentUser.staffId}`}>Bakım Servislerim</Link> 
           </Link>
         </Menu.Item>
         <Menu.Item key="3" icon={<ScheduleOutlined />}>
@@ -78,7 +73,7 @@ function StaffSidebar({ currentUser }) {
           İzin İşlemlerim
         </Menu.Item>
         <Menu.Item key="5" icon={<SettingOutlined />}>
-          <Link to={`staff-careservices/${currentUser.staffId}`}>
+          <Link to={`configs/${currentUser.staffId}`}>
             Kişisel Ayarlarım
           </Link>
         </Menu.Item>

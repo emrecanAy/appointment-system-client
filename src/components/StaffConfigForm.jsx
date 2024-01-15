@@ -1,8 +1,5 @@
-import { Button, Form, Select, message } from "antd";
+import { Button, Form, Popconfirm, Select, message } from "antd";
 import React, { useEffect, useState } from "react";
-import StaffConfigService from "../api/StaffConfigService.ts";
-
-const staffConfigService = new StaffConfigService();
 
 function StaffForm({ staffService, staff, staffConfig }) {
   const [selectedStartShiftHour, setSelectedStartShiftHour] = useState(null);
@@ -12,6 +9,11 @@ function StaffForm({ staffService, staff, staffConfig }) {
 
   const [form] = Form.useForm();
 
+  const handleCancel = (e) => {
+    console.log(e);
+    message.error('Click on No');
+  };
+
   const onFinish = async (values) => {
     const staffId = staff.staffId;
     const staffConfigId = staffConfig.staffConfigId;
@@ -19,7 +21,7 @@ function StaffForm({ staffService, staff, staffConfig }) {
     values.staffId = staffId;
 
     try {
-      console.log(values)
+      console.log(values);
       message.success(`Mesai ayarları güncellendi!`);
     } catch (error) {
       console.log(error);
@@ -63,6 +65,7 @@ function StaffForm({ staffService, staff, staffConfig }) {
     "24:00",
   ];
 
+  /* FILTERS */
   const filterEndShiftHours = () => {
     if (selectedStartShiftHour) {
       const _selectedStartShiftHour = new Date(
@@ -258,9 +261,17 @@ function StaffForm({ staffService, staff, staffConfig }) {
 
           {/* Submit Button */}
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit">
-              Kaydet
-            </Button>
+            <Popconfirm
+              title="Güncelle"
+              description="Güncellemek istediğinize emin misiniz? İleriye yönelik alınmış randevuların çakışması söz konusu olabilir!"
+              onCancel={handleCancel}
+              okText="Evet"
+              cancelText="Hayır"
+            >
+              <Button type="primary" htmlType="submit">
+                Kaydet
+              </Button>
+            </Popconfirm>
           </Form.Item>
         </Form>
       ) : (
