@@ -5,7 +5,7 @@ import {
   UserOutlined,
   SettingOutlined,
   SnippetsOutlined,
-  ScheduleOutlined
+  ScheduleOutlined,
 } from "@ant-design/icons";
 import { Image, Menu, Typography } from "antd";
 import Sider from "antd/es/layout/Sider";
@@ -63,19 +63,23 @@ function StaffSidebar({ currentUser }) {
         </Menu.Item>
         <Menu.Item key="2" icon={<SnippetsOutlined />}>
           <Link>
-            <Link to={`staff-careservices/${currentUser.staffId}`}>Bakım Servislerim</Link> 
+            <Link to={`staff-careservices/${currentUser.staffId}`}>
+              Bakım Servislerim
+            </Link>
           </Link>
         </Menu.Item>
         <Menu.Item key="3" icon={<ScheduleOutlined />}>
-          Randevu İşlemlerim
+          <Link to={`staff-appointments/${currentUser.staffId}`}>
+            Randevu İşlemlerim
+          </Link>
         </Menu.Item>
         <Menu.Item key="4" icon={<PieChartOutlined />}>
-          İzin İşlemlerim
+          <Link to={`staff-permissions/${currentUser.staffId}`}>
+            İzin İşlemlerim
+          </Link>
         </Menu.Item>
         <Menu.Item key="5" icon={<SettingOutlined />}>
-          <Link to={`configs/${currentUser.staffId}`}>
-            Kişisel Ayarlarım
-          </Link>
+          <Link to={`configs/${currentUser.staffId}`}>Kişisel Ayarlarım</Link>
         </Menu.Item>
         <Menu.Item key="6" icon={<FileOutlined />}>
           <Link to={"/"}>Sayfaya Git</Link>

@@ -21,6 +21,16 @@ export class AppointmentService{
         }
     };
 
+    async getAllAppointmentsByStaff(staffId){
+        try {
+            const response = await this.api.get(`/staff/${staffId}`);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    };
+
     async getAllAcceptedAppointmentsByStaff(staffId: string){
         try {
             const response = await this.api.get(`/getallaccepted/${staffId}`);

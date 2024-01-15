@@ -41,6 +41,16 @@ export class PermissionService{
         }
     };
 
+    async createPermission(permission){
+        try {
+            const response = await this.api.post(`/add`, permission);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    }
+
     async deletePermission(permission){
         try {
             const response = await this.api.put(`/delete`, permission);
