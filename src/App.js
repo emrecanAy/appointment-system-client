@@ -12,10 +12,11 @@ import CareService from "./pages/CareService";
 import StaffConfigs from "./pages/StaffConfigs";
 import AppointmentsPage from "./pages/AppointmentsPage";
 import Permissions from "./pages/Permissions";
-import StaffAppointmentPage from "./pages/StaffAppointmentPage";
 import StatisticsPage from "./components/StatisticsPage";
 import Team from "./components/TestMainPage/Team";
 import ComingSoonPage from "./pages/coming-soon/ComingSoonPage";
+import StaffCareServicesPage from "./pages/staff/StaffConfigsPage";
+import StaffAppointmentPage from "./pages/StaffAppointmentPage";
 
 function App() {
   return (
@@ -29,7 +30,7 @@ function App() {
         <Route path="/saloons" element={<ComingSoonPage />} />
         <Route path="/blog" element={<ComingSoonPage />} />
         <Route path="/contact" element={<ComingSoonPage />} />
-        <Route path="/staff-detail/:staffId" element={<StaffAppointmentPage />} />
+        <Route path="/staff-detail/:staffId" element={< StaffAppointmentPage />} />
         <Route path="/dashboard" element={<Dashboard />}>
           <Route index element={<StatisticsPage/>} />
           <Route path="staff" element={<Staff />} />
@@ -39,6 +40,7 @@ function App() {
           <Route path="permissions" element={<Permissions />} />
           <Route path="staffconfigs" element={<StaffConfigs />} />
           <Route path="appointments" element={<AppointmentsPage />} />
+          <Route path="staff-careservices/:staffId" element={<StaffCareServicesPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

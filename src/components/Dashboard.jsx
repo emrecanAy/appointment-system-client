@@ -18,10 +18,6 @@ function Dashboard() {
 
   useEffect(() => {
     if (user && user.imageUrl) {
-      // setCurrentUser((prevUser) => ({
-      //   ...prevUser,
-      //   imageUrl: user.imageUrl,
-      // }));
       setCurrentUser(user);
     }
   }, [user]);

@@ -31,6 +31,16 @@ export class StaffConfigService{
             throw error;
         }
     }
+
+    async getStaffConfigByStaffId(staffId: string){
+        try {
+            const response = await this.api.get(`/staff/${staffId}`);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    }
     
     async createStaffConfig (staffConfig){
         try {

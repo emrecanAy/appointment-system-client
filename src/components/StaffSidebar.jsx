@@ -1,28 +1,27 @@
 import React, { useEffect, useState } from "react";
 import {
-  DesktopOutlined,
   PieChartOutlined,
   FileOutlined,
-  TeamOutlined,
   UserOutlined,
+  SettingOutlined,
+  SnippetsOutlined,
+  ScheduleOutlined
 } from "@ant-design/icons";
 import { Image, Menu, Typography } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Link } from "react-router-dom";
-const { SubMenu } = Menu; // Corrected import
 const { Text } = Typography;
 
 function StaffSidebar({ currentUser }) {
   const [collapsed, setCollapsed] = useState(false);
-  const imageUrl ="https://static.toiimg.com/photo/msid-67586673/67586673.jpg";
-
+  const imageUrl = "https://static.toiimg.com/photo/msid-67586673/67586673.jpg";
 
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);
   };
 
   useEffect(() => {
-    console.log("staff Sidebar çalıştı: "+currentUser.imageUrl)
+    console.log("staff Sidebar çalıştı: " + currentUser.imageUrl);
   }, []);
 
   return (
@@ -65,48 +64,25 @@ function StaffSidebar({ currentUser }) {
       </div>
       <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
         <Menu.Item key="1" icon={<PieChartOutlined />}>
-          Ana Sayfa
+          <Link to={"/dashboard"}>Ana Sayfa</Link>
         </Menu.Item>
-        <SubMenu key="sub3" icon={<UserOutlined />} title="Kuaför İşlemleri">
-          <Menu.Item key="2">
-            <Link
-              to={"/dashboard/care-services"}
-              style={{ color: "inherit", textDecoration: "none" }}
-            >
-              Bakım Servisleri
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="3">
-            <Link to={"/staff/testadd"}>Bill</Link>
-          </Menu.Item>
-          <Menu.Item key="4">Alex</Menu.Item>
-        </SubMenu>
-        <SubMenu
-          key="sub4"
-          icon={<DesktopOutlined />}
-          title="Personel İşlemleri"
-        >
-          <Menu.Item key="5">
-            <Link to={"/dashboard/staff"}>Personeller</Link>
-          </Menu.Item>
-          <Menu.Item key="12">
-            <Link to={"/dashboard/staffconfigs"}>Personel Ayarları</Link>
-          </Menu.Item>
-        </SubMenu>
-        <SubMenu key="sub1" icon={<UserOutlined />} title="Randevu İşlemleri">
-          <Menu.Item key="6">
-            <Link to={"/dashboard/appointments"}>Tüm Randevular</Link>
-          </Menu.Item>
-          <Menu.Item key="7">Bill</Menu.Item>
-          <Menu.Item key="8">Alex</Menu.Item>
-        </SubMenu>
-        <SubMenu key="sub2" icon={<TeamOutlined />} title="İzin İşlemleri">
-          <Menu.Item key="9">
-            <Link to={"/dashboard/permissions"}>İzin Talepleri</Link>
-          </Menu.Item>
-          <Menu.Item key="10">Team 2</Menu.Item>
-        </SubMenu>
-        <Menu.Item key="11" icon={<FileOutlined />}>
+        <Menu.Item key="2" icon={<SnippetsOutlined />}>
+          <Link>
+            Bakım Servislerim
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="3" icon={<ScheduleOutlined />}>
+          Randevu İşlemlerim
+        </Menu.Item>
+        <Menu.Item key="4" icon={<PieChartOutlined />}>
+          İzin İşlemlerim
+        </Menu.Item>
+        <Menu.Item key="5" icon={<SettingOutlined />}>
+          <Link to={`staff-careservices/${currentUser.staffId}`}>
+            Kişisel Ayarlarım
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="6" icon={<FileOutlined />}>
           <Link to={"/"}>Sayfaya Git</Link>
         </Menu.Item>
       </Menu>
