@@ -20,6 +20,7 @@ import StaffAppointmentPage from "./pages/StaffAppointmentPage";
 import StaffCareServicesPage from "./pages/staff/StaffCareServicesPage";
 import StaffAppointmentOperationsPage from "./pages/staff/StaffAppointmentOperationsPage";
 import StaffPermissionOperationsPage from "./pages/staff/StaffPermissionOperationsPage";
+import StaffStatisticsPage from "./pages/staff/StaffStatisticsPage";
 
 function App() {
   return (
@@ -33,9 +34,13 @@ function App() {
         <Route path="/saloons" element={<ComingSoonPage />} />
         <Route path="/blog" element={<ComingSoonPage />} />
         <Route path="/contact" element={<ComingSoonPage />} />
-        <Route path="/staff-detail/:staffId" element={< StaffAppointmentPage />} />
+        <Route
+          path="/staff-detail/:staffId"
+          element={<StaffAppointmentPage />}
+        />
         <Route path="/dashboard" element={<Dashboard />}>
-          <Route index element={<StatisticsPage/>} />
+          <Route index element={<StatisticsPage />} />
+          <Route path="staff-stats/:staffId" element={<StaffStatisticsPage />} />
           <Route path="staff" element={<Staff />} />
           <Route path="staff/add" element={<UserForm />} />
           <Route path="staff/:staffId" element={<StaffDetail />} />
@@ -44,9 +49,18 @@ function App() {
           <Route path="staffconfigs" element={<StaffConfigs />} />
           <Route path="appointments" element={<AppointmentsPage />} />
           <Route path="configs/:staffId" element={<StaffConfigsPage />} />
-          <Route path="staff-careservices/:staffId" element={<StaffCareServicesPage />} />
-          <Route path="staff-appointments/:staffId" element={<StaffAppointmentOperationsPage />} />
-          <Route path="staff-permissions/:staffId" element={<StaffPermissionOperationsPage />} />
+          <Route
+            path="staff-careservices/:staffId"
+            element={<StaffCareServicesPage />}
+          />
+          <Route
+            path="staff-appointments/:staffId"
+            element={<StaffAppointmentOperationsPage />}
+          />
+          <Route
+            path="staff-permissions/:staffId"
+            element={<StaffPermissionOperationsPage />}
+          />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

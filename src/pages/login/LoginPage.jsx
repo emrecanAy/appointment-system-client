@@ -28,7 +28,7 @@ const App = () => {
         message.success("Giriş başarılı!");
         response.data.role === "ADMIN"
           ? navigate("/dashboard", { state: { user: response.data } })
-          : navigate("/dashboard", { state: { user: response.data } });
+          : navigate(`/dashboard/staff-stats/${response.data.staffId}`, { state: { user: response.data } });
       }
     } catch (error) {
       message.error("Hatalı kullanıcı adı veya şifre girdiniz!");

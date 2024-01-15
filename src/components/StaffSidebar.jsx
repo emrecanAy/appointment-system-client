@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   PieChartOutlined,
   FileOutlined,
@@ -59,7 +59,7 @@ function StaffSidebar({ currentUser }) {
       </div>
       <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
         <Menu.Item key="1" icon={<PieChartOutlined />}>
-          <Link to={"/dashboard"}>Ana Sayfa</Link>
+          <Link to={`staff-stats/${currentUser.staffId}`}>Ana Sayfa</Link>
         </Menu.Item>
         <Menu.Item key="2" icon={<SnippetsOutlined />}>
           <Link>
