@@ -44,8 +44,8 @@ function HeaderResponsiveTest() {
                           </Link>
                         </li>
                         <li>
-                          <Link to={"/blog"}>
-                            <div>Blog</div>
+                          <Link to={"/customer/a4d52h5b2d5db22h5"}>
+                            <div>Profil</div>
                           </Link>
                         </li>
                         <li>

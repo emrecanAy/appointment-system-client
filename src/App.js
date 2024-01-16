@@ -21,6 +21,7 @@ import StaffCareServicesPage from "./pages/staff/StaffCareServicesPage";
 import StaffAppointmentOperationsPage from "./pages/staff/StaffAppointmentOperationsPage";
 import StaffPermissionOperationsPage from "./pages/staff/StaffPermissionOperationsPage";
 import StaffStatisticsPage from "./pages/staff/StaffStatisticsPage";
+import CustomerProfilePage from "./pages/customer/CustomerProfilePage";
 
 function App() {
   return (
@@ -37,6 +38,10 @@ function App() {
         <Route
           path="/staff-detail/:staffId"
           element={<StaffAppointmentPage />}
+        />
+        <Route
+          path="/customer/:customerId"
+          element={<CustomerProfilePage />}
         />
         <Route path="/dashboard" element={<Dashboard />}>
           <Route index element={<StatisticsPage />} />

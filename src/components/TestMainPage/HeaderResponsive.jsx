@@ -45,7 +45,7 @@ function Header() {
                         </li>
                         <li>
                           <Link to={"/blog"}>
-                            <div>Blog</div>
+                            <div>Profil</div>
                           </Link>
                         </li>
                         <li>

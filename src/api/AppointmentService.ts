@@ -30,6 +30,7 @@ export class AppointmentService{
             throw error;
         }
     };
+    
 
     async getAllAcceptedAppointmentsByStaff(staffId: string){
         try {
@@ -90,6 +91,16 @@ export class AppointmentService{
             throw error;
         }
     }
+
+    async getAllAppointmentsByCustomer(customerId){
+        try {
+            const response = await this.api.get(`/customer/${customerId}`);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    };
 
     async setAppointmentAccepted(appointment){
         try {
