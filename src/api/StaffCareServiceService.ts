@@ -31,6 +31,16 @@ export class StaffCareServiceService{
         }
     };
 
+    async getAllByCareService(careServiceId: string){
+        try {
+            const response = await this.api.get(`/getallbycareservice/${careServiceId}`);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    };
+
     async createStaffCareService (staffCareService){
         try {
             const response = await this.api.post("/add", staffCareService);

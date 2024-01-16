@@ -22,6 +22,8 @@ import StaffAppointmentOperationsPage from "./pages/staff/StaffAppointmentOperat
 import StaffPermissionOperationsPage from "./pages/staff/StaffPermissionOperationsPage";
 import StaffStatisticsPage from "./pages/staff/StaffStatisticsPage";
 import CustomerProfilePage from "./pages/customer/CustomerProfilePage";
+import CareServicesPage from "./pages/CareServicesPage";
+import FilteredTeam from "./components/team/FilteredTeam";
 
 function App() {
   return (
@@ -32,9 +34,11 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/test5" element={<ComingSoonPage />} />
         <Route path="/our-team" element={<Team />} />
+        <Route path="/our-team/:careServiceId" element={<FilteredTeam />} />
         <Route path="/saloons" element={<ComingSoonPage />} />
         <Route path="/blog" element={<ComingSoonPage />} />
         <Route path="/contact" element={<ComingSoonPage />} />
+        <Route path="/services" element={<CareServicesPage />} />
         <Route
           path="/staff-detail/:staffId"
           element={<StaffAppointmentPage />}

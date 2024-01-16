@@ -25,6 +25,8 @@ const App = () => {
         password
       );
       if (response.data) {
+        console.log(response.data);
+        localStorage.setItem("staff", JSON.stringify(response.data));
         message.success("Giriş başarılı!");
         response.data.role === "ADMIN"
           ? navigate("/dashboard", { state: { user: response.data } })
@@ -42,8 +44,9 @@ const App = () => {
         password
       );
       if (response.data) {
+        localStorage.setItem("customer", JSON.stringify(response.data));
         message.success("Giriş başarılı!");
-        navigate("/")
+        navigate(`/customer/${response.data.customerId}`)
       }
     } catch (error) {
       message.error("Hatalı kullanıcı adı veya şifre girdiniz!");

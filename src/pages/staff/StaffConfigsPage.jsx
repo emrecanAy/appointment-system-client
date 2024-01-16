@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Row, Col, Card } from "antd";
+import { Form, Row, Col, Card, Typography, Alert } from "antd";
 import { useParams } from "react-router-dom";
 import StaffConfigService from "../../api/StaffConfigService.ts";
 import StaffService from "../../api/StaffService.ts";
@@ -17,7 +17,7 @@ const StaffConfigsPage = () => {
   const [staffConfig, setStaffConfig] = useState(null);
 
   const [form] = Form.useForm();
-
+  const { Text } = Typography;
   const { staffId } = useParams();
 
   /* REQUESTS */
@@ -57,9 +57,9 @@ const StaffConfigsPage = () => {
 
   const formatHour = (input) => {
     if (Array.isArray(input) && input.length === 2) {
-      let hour = String(input[0]).padStart(2, '0');
-      let minute = String(input[1]).padStart(2, '0');
-      
+      let hour = String(input[0]).padStart(2, "0");
+      let minute = String(input[1]).padStart(2, "0");
+
       return `${hour}:${minute}`;
     } else {
       return "Geçersiz giriş formatı.";
@@ -113,6 +113,11 @@ const StaffConfigsPage = () => {
               staffConfig={staffConfig}
             />
           </Card>
+          <Alert
+            message="Uyarı"
+            description="Randevu aralığı ve işlem sürelerinizi birbirine uygun bir şekilde ayarlayınız. Örneğin: müsait randevu aralığı değerini 30 dakika seçtiyseniz, işlem sürelerinizin de 30'un katları olmasına dikkat ediniz. Müsait randevu saatleriniz gereksiz yere silinebilir."
+            type="warning"
+          />
         </Col>
       </Row>
     </div>

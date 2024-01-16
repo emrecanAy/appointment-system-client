@@ -1,8 +1,8 @@
 import React from "react";
-import StaffAppointmentDetail from "../../components/TestMainPage/StaffAppointmentDetail";
-import HeaderResponsiveTest from "../../components/TestMainPage/HeaderResponsiveTest";
+import HeaderResponsive from "../../components/TestMainPage/HeaderResponsive";
 import Footer from "../../components/TestMainPage/Footer";
 import CustomerAppointments from "./CustomerAppointments";
+import CustomerDetails from "./CustomerDetails";
 
 const customer = {
   customerId: "b2961bbe-260f-4693-bd1a-8fcd63388c91",
@@ -18,9 +18,9 @@ const customer = {
 function CustomerProfilePage() {
   return (
     <div>
-      <HeaderResponsiveTest />
+      <HeaderResponsive />
       <main>
-        <StaffAppointmentDetail staff={customer} />
+        <CustomerDetails customer={customer} />
         <CustomerAppointments customer={customer}/>
       </main>
       <Footer />

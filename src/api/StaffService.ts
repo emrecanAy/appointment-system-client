@@ -22,6 +22,16 @@ export class CareServiceService{
             throw error;
         }
     };
+
+    async getAllStaffByCareService(careServiceId){
+        try {
+            const response: AxiosResponse<Staff> = await this.api.get(`/getall/${careServiceId}`);
+            return response.data;
+        } catch (error) {
+            console.log("API error: ", error);
+            throw error;
+        }
+    };
     
     async getStaffById(staffId: string): Promise<Staff>{
         try {

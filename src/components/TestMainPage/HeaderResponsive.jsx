@@ -1,11 +1,27 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./HeaderResponsive.css";
+import { message } from "antd";
 
-function Header() {
+function Header({ customer }) {
+
+  const navigate = useNavigate();
+  const customerData = JSON.parse(localStorage.getItem('customer'));
+  console.log("HEADER:", customer);
+  const staff = JSON.parse(localStorage.getItem('staff'));
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/")
+    message.success("Çıkış yapıldı!");
+  }
+
   return (
     <header>
-      <div className="header-area header-transparent pt-20">
+      <div
+        className="header-area header-transparent pt-20"
+        style={{ backgroundColor: "black" }}
+      >
         <div className="main-header header-sticky">
           <div className="container-fluid">
             <div className="row align-items-center">
@@ -29,7 +45,7 @@ function Header() {
                           </Link>
                         </li>
                         <li>
-                          <Link to={"/find-saloon"}>
+                          <Link to={"/saloons"}>
                             <div>Salon Bul</div>
                           </Link>
                         </li>
@@ -39,15 +55,19 @@ function Header() {
                           </Link>
                         </li>
                         <li>
-                          <Link to={"/team"}>
+                          <Link to={"/services"}>
                             <div>Hizmetler</div>
                           </Link>
                         </li>
-                        <li>
-                          <Link to={"/blog"}>
-                            <div>Profil</div>
-                          </Link>
-                        </li>
+                        {
+                          customerData ? ( <li>
+                            <Link to={"/customer/a4d52h5b2d5db22h5"}>
+                              <div>Profil</div>
+                            </Link>
+                          </li>) : (<></>)
+                        }
+                       
+
                         <li>
                           <Link to={"/contact"}>
                             <div>İletişim</div>
@@ -56,25 +76,48 @@ function Header() {
                       </ul>
                     </nav>
                   </div>
-                  <div className="header-right-btn f-right d-none d-lg-block ml-30">
-                    <Link to={"/register"}>
-                    <div className="btn header-btn" style={{color: "black"}}>
-                      İşletmeni Kaydet
-                    </div>
-                    </Link>
-                  </div>
-                  <div className="header-right-btn f-right d-none d-lg-block ml-30">
-                    <Link to={"/login"}>
-                    <div className="btn header-btn" style={{color: "black"}}>
-                      Giriş Yap
-                    </div>
-                    </Link>
+                  <div>
+                    {!customerData ? (
+                      <div>
+                        <div className="header-right-btn f-right d-none d-lg-block ml-30">
+                          <Link to={"/register"}>
+                            <div
+                              className="btn header-btn"
+                              style={{ color: "black" }}
+                            >
+                              İşletmeni Kaydet
+                            </div>
+                          </Link>
+                        </div>
+                        <div className="header-right-btn f-right d-none d-lg-block ml-30">
+                          <Link to={"/login"}>
+                            <div
+                              className="btn header-btn"
+                              style={{ color: "black" }}
+                            >
+                              Giriş Yap
+                            </div>
+                          </Link>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="header-right-btn f-right d-none d-lg-block ml-30">
+                        <Link to={"/"}>
+                          <div
+                            onClick={handleLogout}
+                            className="btn header-btn"
+                            style={{ color: "black" }}
+                          >
+                            Çıkış Yap
+                          </div>
+                        </Link>
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
-              {/* Mobile Menu */}
-              <div className="col-12">
-                <div className="mobile_menu d-block d-lg-none"></div>
+                <div className="col-12">
+                  <div className="mobile_menu d-block d-lg-none"></div>
+                </div>
               </div>
             </div>
           </div>

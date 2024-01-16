@@ -6,19 +6,22 @@ import StaffService from "../../api/StaffService.ts";
 import StaffCareServiceService from "../../api/StaffCareServiceService.ts";
 import HeaderResponsive from "../TestMainPage/HeaderResponsive.jsx";
 import { Spin } from "antd";
+import { useParams } from "react-router-dom";
 
 /* SERVICES */
 const staffService = new StaffService();
 const staffCareServiceService = new StaffCareServiceService();
 
-function Team() {
+function FilteredTeam() {
   const [staff, setStaff] = useState(null);
   const [staffCareServices, setStaffCareServices] = useState(null);
 
+  const { careServiceId } = useParams();
+
   /* REQUESTS */
-  const getAllStaff = async () => {
+  const getAllStaffByCareService = async (careServiceId) => {
     try {
-      const response = await staffService.getAllStaff();
+      const response = await staffService.getAllStaffByCareService(careServiceId);
       setStaff(response.data);
     } catch (error) {
       console.log(error);
@@ -46,16 +49,16 @@ function Team() {
 
   /* USE EFFECTS */
   useEffect(() => {
-    getAllStaff();
+    getAllStaffByCareService(careServiceId);
     getAllStaffCareServices();
-  }, []);
+  }, [careServiceId]);
 
   return (
     <>
       <div className="container">
         <HeaderResponsive />
-        <div className="row">
-          {staff && staffCareServices ? (
+        <div className="row" style={{marginTop:"250px"}}>
+          {staff && staffCareServices ? ( 
             staff.map((s) => (
               <TeamCard
                 key={s.staffId}
@@ -85,4 +88,4 @@ function Team() {
   );
 }
 
-export default Team;
+export default FilteredTeam;

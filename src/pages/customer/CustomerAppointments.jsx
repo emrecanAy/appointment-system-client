@@ -196,7 +196,7 @@ function CustomerAppointments({ customer }) {
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
-      <h2>Randevularım</h2>
+      <h1>Randevularım</h1>
       <Table
         columns={columns}
         dataSource={appointments}

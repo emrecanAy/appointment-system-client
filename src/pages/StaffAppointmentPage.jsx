@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Footer from "../components/TestMainPage/Footer";
-import HeaderResponsiveTest from "../components/TestMainPage/HeaderResponsiveTest.jsx"
+import HeaderResponsive from "../components/TestMainPage/HeaderResponsive.jsx"
 import StaffAppointmentDetail from "../components/TestMainPage/StaffAppointmentDetail";
 import StaffAppointmentLogic from "../components/staffAppointment/StaffAppointmentLogic";
 import "./StaffAppointmentLogic.css";
 import { useParams } from "react-router-dom";
 import StaffService from "../api/StaffService.ts";
+import Footer from "../components/footer/Footer.jsx";
 
 const staffService = new StaffService();
 
@@ -32,7 +32,7 @@ function StaffAppointmentPage() {
 
   return (
     <div>
-      <HeaderResponsiveTest/>
+      <HeaderResponsive/>
       <main>
         <StaffAppointmentDetail staff={staff} />
         <StaffAppointmentLogic staff={staff} />
