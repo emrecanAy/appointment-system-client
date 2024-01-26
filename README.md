@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a>
-    <img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/src/global/gc1.png" alt="Logo" width="80" height="80">
+    <img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/src/global/gc1.png" alt="Logo">
   </a>
 
 <h3 align="center">Glowcut</h3>
