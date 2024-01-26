@@ -28,8 +28,8 @@ Müşteri giriş ve kayıt işlemlerini yapabiliyor. Aynı zamanda eritabanında
 
 ## Giriş Yap - Kayıt Ol
 <p float="left">
-<img width="500" src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/login.png" />
-<img width="500" src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/register.png" />
+<img width="800" src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/login.png" />
+<img width="800" src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/register.png" />
 </p>
 Müşteri e-posta ve parolasını girerek giriş yapıyor. 
 Kayıt olurken kullanıcı adı ve e-mail bilgisi anlık olarak daha önce kayıtlı mı değil mi kontrolü yapılarak müşteriye uyarı gösteriliyor.
