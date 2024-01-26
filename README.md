@@ -48,14 +48,17 @@ Müşteri profilinde daha önce almış olduğu randevuları ve randevu durumlar
 <img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/appointment-hours.png" />
 Seçilen personelden randevu alınmak istendiğinde seçilen personelin yaptığı işlemleri gördüğümüz bu sayfa açılıyor. Seçilen tarihe göre saatler listeleniyor. 
 Müsait saat bilgileri dinamik olarak personelin belirlediği mesai başlangıç, mesai bitiş, mola başlangıç ve mola bitiş saatine göre filtrelenerek listeleniyor.
--Tüm kabul edilmiş ve beklemede olan randevular içinden yalnızca seçilen gündekiler filtreleniyor.
--Tüm kabul edilmiş izinler içinden yalnızca seçilen gündekiler filtreleniyor.
--Önceden alınmış randevu slotları filtreleniyor.
--Önceden alınmış izin slotları filtreleniyor.
--Toplam işlem süresi sıradaki randevuyla çakışıyor mu?
--Toplam işlem süresi mola saatiyle çakışıyor mu?
--Toplam işlem süresi izin saatiyle çakışıyor mu?
--Toplam işlem süresi mesai bitiş saatiyle çakışıyor mu?
+<ul>
+    <li>-Tüm kabul edilmiş ve beklemede olan randevular içinden yalnızca seçilen gündekiler filtreleniyor.</li>
+    <li>-Tüm kabul edilmiş izinler içinden yalnızca seçilen gündekiler filtreleniyor.</li>
+    <li>-Önceden alınmış randevu slotları filtreleniyor.</li>
+    <li>-Önceden alınmış izin slotları filtreleniyor.</li>
+    <li>-Toplam işlem süresi sıradaki randevuyla çakışıyor mu?</li>
+    <li>-Toplam işlem süresi mola saatiyle çakışıyor mu?</li>
+    <li>-Toplam işlem süresi izin saatiyle çakışıyor mu?</li>
+    <li>-Toplam işlem süresi mesai bitiş saatiyle çakışıyor mu?</li>
+</ul>
+
 kontrolleri yapılıyor.
 
 <p align="right">(<a href="#top">Başa dön</a>)</p>
@@ -74,52 +77,52 @@ kontrolleri yapılıyor.
 
 ## Admin - Personel İşlemleri
 
-<img src="https://github.com/emrecanAy/inif-assemsoft/blob/master/images/admin-dashboard-staff.png" />
-<img src="https://github.com/emrecanAy/inif-assemsoft/blob/master/images/admin-dashboard-staffdetail.png" />
-<img src="https://github.com/emrecanAy/inif-assemsoft/blob/master/images/admin-dashboard-staffconfigs.png" />
+<img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/admin-dashboard-staff.png" />
+<img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/admin-dashboard-staffdetail.png" />
+<img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/admin-dashboard-staffconfigs.png" />
 
 <p align="right">(<a href="#top">Başa dön</a>)</p>
 
 ## Admin - Randevu İşlemleri
 
-<img src="https://github.com/emrecanAy/inif-assemsoft/blob/master/images/admin-dashboard-appointments.png" />
+<img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/admin-dashboard-appointments.png" />
 
 <p align="right">(<a href="#top">Başa dön</a>)</p>
 
 ## Admin - İzin İşlemleri
 
-<img src="https://github.com/emrecanAy/inif-assemsoft/blob/master/images/admin-dashboard-permissions.png" />
+<img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/admin-dashboard-permissions.png" />
 
 <p align="right">(<a href="#top">Başa dön</a>)</p>
 
 ## Personel Dashboard
 
-<img src="https://github.com/emrecanAy/inif-assemsoft/blob/master/images/staff-dashboard.png" />
+<img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/staff-dashboard.png" />
 
 <p align="right">(<a href="#top">Başa dön</a>)</p>
 
 ## Personel - Hizmet İşlemleri
 
-<img src="https://github.com/emrecanAy/inif-assemsoft/blob/master/images/staff-dashboard-services.png" />
+<img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/staff-dashboard-services.png" />
 
 <p align="right">(<a href="#top">Başa dön</a>)</p>
 
 ## Personel - Randevu İşlemleri
 
-<img src="https://github.com/emrecanAy/inif-assemsoft/blob/master/images/staff-dashboard-appointments.png" />
+<img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/staff-dashboard-appointments.png" />
 
 <p align="right">(<a href="#top">Başa dön</a>)</p>
 
 ## Personel - İzin İşlemleri
 
-<img src="https://github.com/emrecanAy/inif-assemsoft/blob/master/images/staff-dashboard-permissions.png" />
-<img src="https://github.com/emrecanAy/inif-assemsoft/blob/master/images/staff-dashboard-addpermission.png" />
+<img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/staff-dashboard-permissions.png" />
+<img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/staff-dashboard-addpermission.png" />
 
 <p align="right">(<a href="#top">Başa dön</a>)</p>
 
 ## Personel - Ayar İşlemleri
 
-<img src="https://github.com/emrecanAy/inif-assemsoft/blob/master/images/staff-dashboard-settings.png" />
+<img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/images/staff-dashboard-settings.png" />
 
 <p align="right">(<a href="#top">Başa dön</a>)</p>
 
