@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import StatsCard from "../statistics/StatsCard";
 
 function Slider() {
   const divStyle = {
@@ -35,7 +36,7 @@ function Slider() {
       </div>
       {/* <!-- Arrow --> */}
       <div className="thumb-content-box">
-        <Link to={"/appointment"}>
+        <Link to={"/services"}>
         <div className="thumb-content" >
           <h3>Hemen Randevu Oluştur</h3>
           <div>

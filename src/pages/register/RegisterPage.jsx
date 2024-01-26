@@ -22,7 +22,7 @@ const RegisterPage = () => {
     try {
       const response = await customerService.getCustomerByUsername(value);
       if (response.data) {
-        return Promise.reject('Bu kullanıcı adı zaten kayıtlı!');
+        return Promise.reject("Bu kullanıcı adı zaten kayıtlı!");
       } else {
         return Promise.resolve();
       }
@@ -36,7 +36,7 @@ const RegisterPage = () => {
     try {
       const response = await customerService.getCustomerByEmail(value);
       if (response.data) {
-        return Promise.reject('Bu e-posta adresi zaten kayıtlı!');
+        return Promise.reject("Bu e-posta adresi zaten kayıtlı!");
       } else {
         return Promise.resolve();
       }
@@ -48,6 +48,8 @@ const RegisterPage = () => {
 
   const register = async (values) => {
     try {
+      message.error("Girmiş olduğunuz e-posta adresi daha önceden kayıtlı!");
+
       const response = await customerService.createCustomer(values);
       response
         ? message.success("Başarıyla kayıt olundu!")
@@ -102,12 +104,12 @@ const RegisterPage = () => {
             <Option value="FEMALE">Kadın</Option>
           </Select>
         </Form.Item>
-        
+
         <Form.Item
           name="userName"
           rules={[
             { required: true, message: "Lütfen kullanıcı adınızı girin!" },
-            { validator: validateUsernameRule }
+            { validator: validateUsernameRule },
           ]}
         >
           <Input
@@ -124,8 +126,8 @@ const RegisterPage = () => {
               message: "Lütfen e-postanızı girin!",
             },
             {
-              validator: validateEmailRule
-            }
+              validator: validateEmailRule,
+            },
           ]}
         >
           <Input

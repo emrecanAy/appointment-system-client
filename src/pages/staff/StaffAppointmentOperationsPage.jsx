@@ -104,16 +104,20 @@ const StaffAppointmentOperationsPage = () => {
             .includes(value.toLowerCase()) ||
           String(record.customer.lastName)
             .toLowerCase()
-            .includes(value.toLowerCase())||
-            String(record.appointmentDate)
-              .toLowerCase()
-              .includes(value.toLowerCase())
+            .includes(value.toLowerCase()) ||
+          String(record.appointmentDate)
+            .toLowerCase()
+            .includes(value.toLowerCase())
         );
       },
       filteredValue: [searchedText],
       render: (_, record) => (
-        <strong><i>
-          {formatFullName(record.customer.firstName, record.customer.lastName)}
+        <strong>
+          <i>
+            {formatFullName(
+              record.customer.firstName,
+              record.customer.lastName
+            )}
           </i>
         </strong>
       ),

@@ -1,6 +1,7 @@
 import React from 'react'
 
 function CustomerDetails({customer}) {
+  customer.imagePath = "https://cdn-icons-png.flaticon.com/512/4140/4140048.png";
   return (
     <section className="about-area section-padding30 position-relative">
           <div className="container">
@@ -15,7 +16,7 @@ function CustomerDetails({customer}) {
                 <div className="about-caption">
                   {/* <!-- Section Tittle --> */}
                   <div className="section-tittle section-tittle3 mb-35">
-                    <span>Hair Stylist</span>
+                    <span>@{customer.userName}</span>
                     <h2>{customer.firstName} {customer.lastName}</h2>
                   </div>
                   <p className="mb-30 pera-bottom">

@@ -75,10 +75,6 @@ function Sidebar({ currentUser }) {
               Bakım Servisleri
             </Link>
           </Menu.Item>
-          <Menu.Item key="3">
-            <Link to={"staff/testadd"}>Bill</Link>
-          </Menu.Item>
-          <Menu.Item key="4">Alex</Menu.Item>
         </SubMenu>
         <SubMenu
           key="sub4"
@@ -96,14 +92,11 @@ function Sidebar({ currentUser }) {
           <Menu.Item key="6">
             <Link to={"appointments"}>Tüm Randevular</Link>
           </Menu.Item>
-          <Menu.Item key="7">Bill</Menu.Item>
-          <Menu.Item key="8">Alex</Menu.Item>
         </SubMenu>
         <SubMenu key="sub2" icon={<TeamOutlined />} title="İzin İşlemleri">
           <Menu.Item key="9">
             <Link to={"permissions"}>İzin Talepleri</Link>
           </Menu.Item>
-          <Menu.Item key="10">Team 2</Menu.Item>
         </SubMenu>
         <Menu.Item key="11" icon={<FileOutlined />}>
           <Link to={"/"}>Sayfaya Git</Link>

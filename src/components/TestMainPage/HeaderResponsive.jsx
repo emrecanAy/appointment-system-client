@@ -46,7 +46,7 @@ function Header({ customer }) {
                         </li>
                         <li>
                           <Link to={"/saloons"}>
-                            <div>Salon Bul</div>
+                            <li >Salon Bul</li>
                           </Link>
                         </li>
                         <li>

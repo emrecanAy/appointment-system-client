@@ -15,8 +15,8 @@ function AboutPart() {
             <div className="about-caption">
               {/* <!-- Section Tittle --> */}
               <div className="section-tittle section-tittle3 mb-35">
-                <span>About Our company</span>
-                <h2>52 Years Of Experience In Hair cut!</h2>
+                <span>Salonumuz</span>
+                <h2>Deneyimli Çalışanlarımızla Kaliteli Hizmet!</h2>
               </div>
               <p className="mb-30 pera-bottom">
                 Brook presents your services with flexible, convenient and cdpoe

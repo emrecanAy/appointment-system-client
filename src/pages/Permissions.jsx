@@ -168,7 +168,15 @@ const PermissionTable = () => {
       dataIndex: "status",
       key: "status",
       render: (text, record) => {
-        return <p>{record.status}</p>;
+        if(record.status === "WAITING"){
+          return <p>BEKLEMEDE</p>;
+        }else if(record.status === "CANCELLED"){
+          return <p>İPTAL</p>;
+        }else if(record.status === "ACCEPTED"){
+          return <p>ONAYLANDI</p>;
+        }else if(record.status === "DECLINED"){
+          return <p>REDDEDİLDİ</p>;
+        }
       },
       filters: [
         { text: "WAITING", value: "WAITING" },

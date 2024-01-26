@@ -4,6 +4,8 @@ import StaffConfigService from "../api/StaffConfigService.ts";
 import AppointmentService from "../api/AppointmentService.ts";
 import PermissionService from "../api/PermissionService.ts";
 import TextArea from "antd/es/input/TextArea";
+import { useNavigate } from "react-router-dom";
+import { duration } from "moment";
 
 const appointmentService = new AppointmentService();
 const staffConfigService = new StaffConfigService();
@@ -29,6 +31,11 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
   const [selectedAppointment, setSelectedAppointment] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [isDateSelected, setIsDateSelected] = useState(false);
+
+  const navigate = useNavigate();
+  message.config({
+    duration: 8
+  });
 
   /* REQUESTS */
   const getAllAcceptedPermissionsByStaff = async (staffId) => {
@@ -270,8 +277,7 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
               `Seçtiğiniz işlemlerin toplam süresi sıradaki randevuyu aşmaktadır! Sıradaki randevu saati: ${stringAppointmentHour}. Alabileceğiniz maksimum işlem süresi: ${differenceInMinutes}`
             );
             message.warning(
-              `Seçtiğiniz işlemlerin toplam süresi sıradaki randevuyu aşmaktadır! Sıradaki randevu saati: ${stringAppointmentHour}. Alabileceğiniz maksimum işlem süresi: ${differenceInMinutes} dakika.`
-            );
+              `Seçtiğiniz işlemlerin toplam süresi sıradaki randevuyu aşmaktadır! Sıradaki randevu saati: ${stringAppointmentHour}. Alabileceğiniz maksimum işlem süresi: ${differenceInMinutes} dakika.`, 15);
           }
         }
       }
@@ -552,11 +558,17 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
 
   const handlePopconfirm = (e) => {
     createAppointment();
+    navigate(`/staff-detail/${staffId}`);
     message.success("Randevu başarılı bir şekilde alındı.");
   };
   const handlePopcancel = (e) => {
     message.error("Randevu işlemi iptal edildi!");
   };
+
+  function disabledDate(current) {
+    // Can not select days before today and today
+    return current && current.valueOf() < Date.now();
+  }
 
   /* USE EFFECTS */
   useEffect(() => {
@@ -602,6 +614,7 @@ const AppointmentScheduler = ({ staffId, selectedServices }) => {
               <div style={{ marginTop: "35px" }}>
                 <h2>Tarih</h2>
                 <DatePicker
+                  disabledDate={disabledDate}
                   placeholder="Tarih seç"
                   onChange={handleDateChange}
                   style={{ marginBottom: "20px" }}
