@@ -122,7 +122,7 @@ kontrolleri yapılıyor.
 
 ## Personel - Ayar İşlemleri
 
-<img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/images/staff-dashboard-settings.png" />
+<img src="https://raw.githubusercontent.com/emrecanAy/appointment-system-client/master/screenshots/staff-dashboard-settings.png" />
 
 <p align="right">(<a href="#top">Başa dön</a>)</p>
 
